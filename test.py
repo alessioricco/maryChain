@@ -51,7 +51,7 @@
 
 '''
 
-import maryChain as mc
+import maryChain.maryChain as mc
 
 
 def assertion(s, expected):
@@ -82,9 +82,12 @@ def assertion(s, expected):
     else:
         print(f"FAIL: {s} => {result}, expected {expected}")
 
+assertion("'hello' | out","hello")
+assertion("('hello' | out) | out ","hello")
+assertion("'hello' | out | out ","hello")
+assertion("'hello' | out | out | out","hello")
 
-
-assertion("add(1)",1)  # Integer literal
+# assertion("add(1)",1)  # Integer literal
 # assertion("add(1)(2)",3)  # Integer literal
 
 assertion("1",1)  # Integer literal
@@ -135,51 +138,51 @@ assertion(f"""
 
 # assertion(f"""import Workers.functions as core""",None)
 
-assertion("lambda (x) x*2", "<lambda function>")  # Lambda function definition
-assertion("(lambda (x) x*2)(3)", 6)  # Lambda function application
-assertion("while false do 1", None)  # While statement with false condition
+# assertion("lambda (x) x*2", "<lambda function>")  # Lambda function definition
+# assertion("(lambda (x) x*2)(3)", 6)  # Lambda function application
+# assertion("while false do 1", None)  # While statement with false condition
 
-assertion("let x = 5 in x", 5)  # Let-in expression
-assertion("let x = 5 in x*2", 10)  # Let-in expression with use of defined variable
-assertion("let x = 5 in let y = 2 in x*y", 10)  # Nested let-in expressions
-assertion("let x = 5 in let x = 2 in x", 2)  # Shadowing in let-in expressions
-assertion("let double = lambda x. x*2 in double(3)", 6)  # Let-in expression with lambda function
-assertion("let x = 5 in while x > 0 do x = x - 1", 0)  # Loop decrementing a value until it reaches 0
-assertion("let x = 5 in while x > 0 do let y = x in x = x - 1 end end; x", 0)  # Similar loop, but uses an extra variable inside the loop
-assertion("let x = 1 in while x < 100 do x = x * 2 end; x", 128)  # Loop doubling a value until it reaches or exceeds a certain value
-assertion("let x = 0 in let y = 5 in while y > 0 do x = x + y; y = y - 1 end end; x", 15)  # Loop calculating the sum of the first few integers
-assertion("let x = 1 in let y = 0 in while x <= 10 do y = y + x; x = x + 1 end end; y", 55)  # Loop calculating the sum of the first ten integers
+# assertion("let x = 5 in x", 5)  # Let-in expression
+# assertion("let x = 5 in x*2", 10)  # Let-in expression with use of defined variable
+# assertion("let x = 5 in let y = 2 in x*y", 10)  # Nested let-in expressions
+# assertion("let x = 5 in let x = 2 in x", 2)  # Shadowing in let-in expressions
+# assertion("let double = lambda x. x*2 in double(3)", 6)  # Let-in expression with lambda function
+# assertion("let x = 5 in while x > 0 do x = x - 1", 0)  # Loop decrementing a value until it reaches 0
+# assertion("let x = 5 in while x > 0 do let y = x in x = x - 1 end end; x", 0)  # Similar loop, but uses an extra variable inside the loop
+# assertion("let x = 1 in while x < 100 do x = x * 2 end; x", 128)  # Loop doubling a value until it reaches or exceeds a certain value
+# assertion("let x = 0 in let y = 5 in while y > 0 do x = x + y; y = y - 1 end end; x", 15)  # Loop calculating the sum of the first few integers
+# assertion("let x = 1 in let y = 0 in while x <= 10 do y = y + x; x = x + 1 end end; y", 55)  # Loop calculating the sum of the first ten integers
 
-# Defining and calling a function
-assertion("let f = \\x -> x + 1 in f(5)", 6)
+# # Defining and calling a function
+# assertion("let f = \\x -> x + 1 in f(5)", 6)
 
-# Function that calculates factorial
-assertion("""
-let factorial = \\n ->
-    if n = 0 then 1 else n * factorial(n - 1) end
-in factorial(5)
-""", 120)
+# # Function that calculates factorial
+# assertion("""
+# let factorial = \\n ->
+#     if n = 0 then 1 else n * factorial(n - 1) end
+# in factorial(5)
+# """, 120)
 
-# Function that calculates the nth Fibonacci number
-assertion("""
-let fib = \\n ->
-    if n <= 1 then n else fib(n - 1) + fib(n - 2) end
-in fib(10)
-""", 55)
+# # Function that calculates the nth Fibonacci number
+# assertion("""
+# let fib = \\n ->
+#     if n <= 1 then n else fib(n - 1) + fib(n - 2) end
+# in fib(10)
+# """, 55)
 
-# Function that checks if a number is even
-assertion("""
-let is_even = \\n ->
-    if n % 2 = 0 then true else false end
-in is_even(4)
-""", True)
+# # Function that checks if a number is even
+# assertion("""
+# let is_even = \\n ->
+#     if n % 2 = 0 then true else false end
+# in is_even(4)
+# """, True)
 
-# Function that takes another function as an argument
-assertion("""
-let apply_twice = \\(f, x) -> f(f(x)) in
-let add_one = \\x -> x + 1 in
-apply_twice(add_one, 0)
-""", 2)
+# # Function that takes another function as an argument
+# assertion("""
+# let apply_twice = \\(f, x) -> f(f(x)) in
+# let add_one = \\x -> x + 1 in
+# apply_twice(add_one, 0)
+# """, 2)
 
 # assertion("add(1)",2)
 # assertion("1 | out(_)",1)

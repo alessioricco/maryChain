@@ -41,9 +41,9 @@
 
 # Importing necessary libraries
 from ply import lex, yacc
-from maryChainAST import Program, BinOp, UnaryOperation, Number, String, Boolean, Identifier, LetIn, LambdaFunction
-from maryChainAST import FunctionDef, FunctionCall, While, IfThenElse, IfThen, Lazy, Pipe, Import
-import maryChainAST as AST
+from maryChain.maryChainAST import Program, BinOp, UnaryOperation, Number, String, Boolean, Identifier, LetIn, LambdaFunction
+from maryChain.maryChainAST import FunctionDef, FunctionCall, While, IfThenElse, IfThen, Lazy, Pipe, Import
+import maryChain.maryChainAST as AST
 
 # Define the list of tokens that the lexer will recognize
 # Define the list of tokens that the lexer will recognize.
