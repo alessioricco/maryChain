@@ -148,9 +148,9 @@ assertion("lambda (x) x*2 (3)", 6)  # Lambda function application
 assertion("while false do 1", False)  # While statement with false condition
 
 assertion("let x = 5 in x", 5)  # Let-in expression
-# assertion("let x = 5 in x*2", 10)  # Let-in expression with use of defined variable
-# assertion("let x = 5 in let y = 2 in x*y", 10)  # Nested let-in expressions
-# assertion("let x = 5 in let x = 2 in x", 2)  # Shadowing in let-in expressions
+assertion("let x = 5 in x*2", 10)  # Let-in expression with use of defined variable
+assertion("let x = 5 in let y = 2 in x*y", 10)  # Nested let-in expressions
+assertion("let x = 5 in let x = 2 in x", 2)  # Shadowing in let-in expressions
 # assertion("let double = lambda x. x*2 in double(3)", 6)  # Let-in expression with lambda function
 # assertion("let x = 5 in while x > 0 do x = x - 1", 0)  # Loop decrementing a value until it reaches 0
 # assertion("let x = 5 in while x > 0 do let y = x in x = x - 1 end end; x", 0)  # Similar loop, but uses an extra variable inside the loop

@@ -853,7 +853,7 @@ def inject_parsing(parse):
     FUNCTION_DICT['exec'] = (lambda x: evaluate(parse(x)))
     return 
 
-def evaluate(node, env={}):
+def evaluate(node, env=ENVIRONMENT):
     """
     The evaluate function is used to evaluate different types of nodes in an abstract syntax tree (AST).
     It returns the evaluated result of the node.

@@ -665,7 +665,7 @@ def eval(s):
 
     # If the result is a Lazy node, evaluate it to get the final result
     if isinstance(result, Lazy):
-        result = result.evaluate()
+        result = result.evaluate(AST.ENVIRONMENT)
 
     # Return the result of the evaluation
     return result
