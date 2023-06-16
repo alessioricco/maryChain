@@ -53,7 +53,7 @@ class Evaluable(ABC):
     """
 
     @abstractmethod
-    def evaluate(self, **kwargs):
+    def evaluate(self, env):
         """
         Abstract method for evaluating an entity.
 
@@ -82,13 +82,13 @@ class Program(Evaluable):
         self.imports = imports
         self.expression = expression
 
-    def evaluate(self):
+    def evaluate(self,env):
 
         for import_stmt in self.imports:
-            import_stmt.evaluate()
+            import_stmt.evaluate(env)
 
         if self.expression:
-            return self.expression.evaluate()
+            return self.expression.evaluate(env)
 
 class Import(Expression):
     def __init__(self, module_parts, alias):
@@ -96,7 +96,7 @@ class Import(Expression):
         self.module_name = module_parts
         self.alias = alias
 
-    def evaluate(self):
+    def evaluate(self,env):
         add_module_functions_to_dict(self.module_name, self.alias)
 
 
@@ -104,16 +104,16 @@ class Import(Expression):
 # --------------------------------------------------------------
 #  external functions
 def print_func(x):
-    # if isinstance(x, Lazy):
-    #     x = x.evaluate()
+    if isinstance(x, Lazy):
+        x = x.evaluate()
     print(x)
     return x
 
 def add_func(x, y):
-    # if isinstance(x, Lazy):
-    #     x = x.evaluate()
-    # if isinstance(y, Lazy):
-    #     y = y.evaluate()
+    if isinstance(x, Lazy):
+        x = x.evaluate()
+    if isinstance(y, Lazy):
+        y = y.evaluate()
     return x + y
 
 def eval_func(x):
@@ -132,7 +132,7 @@ def curry(func):
         def curried(*args, **kwargs):
             all_args = func.args + args
             all_kwargs = {**func.keywords, **kwargs}
-            evaluated_args = [arg.evaluate() if isinstance(arg,Evaluable) else arg for arg in args]
+            evaluated_args = [arg.evaluate({}) if isinstance(arg,Evaluable) else arg for arg in args]
 
             if len(all_args) + len(all_kwargs) >= num_required_args:
                 return func(*evaluated_args, **all_kwargs)
@@ -146,7 +146,7 @@ def curry(func):
 
         @wraps(func)
         def curried(*args, **kwargs):
-            evaluated_args = [arg.evaluate() if isinstance(arg,Evaluable) else arg for arg in args]
+            evaluated_args = [arg.evaluate({}) if isinstance(arg,Evaluable) else arg for arg in args]
             if len(args) + len(kwargs) >= num_required_args:
                 return func(*evaluated_args, **kwargs)
             else:
@@ -157,7 +157,7 @@ def curry(func):
 # --------------------------------------------------------------
 #  environment
 
-ENVIRONMENT = {}
+ENVIRONMENT = {'?':None}
 
 # --------------------------------------------------------------
 
@@ -166,12 +166,12 @@ class CurriedFunction(Expression):
         self.func = func
         self.args = args
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
 
-        print(f"evaluate: CurriedFunction f:{self.func} a:{self.args} k:{kwargs}")
+        print(f"evaluate: CurriedFunction f:{self.func} a:{self.args} k:{env}")
 
         # Apply currying to the function being curried
-        curried_func = curry(self.func.evaluate())
+        curried_func = curry(self.func.evaluate(env))
 
         # Apply the partially applied arguments to the curried function
         # evaluated_args = [arg.evaluate() for arg in self.args]
@@ -200,8 +200,8 @@ class FunctionCall(Expression):
                      | function_call LPAREN RPAREN
                      | IDENTIFIER'''
 
-    def evaluate(self, **kwargs):
-            print(f"evaluate: FunctionCall f:{self.func} a:{self.args} k:{kwargs}")
+    def evaluate(self,env):
+            print(f"evaluate: FunctionCall f:{self.func} a:{self.args} k:{env}")
             func = None
 
             # Check if it's a curried function
@@ -221,9 +221,13 @@ class FunctionCall(Expression):
             # Check if it's a regular FunctionCall
             elif isinstance(self.func, FunctionCall):
                 func = self.func
-
+            elif isinstance(self.func, LambdaFunction):
+                func = self.func
+                evaluated_args = [arg.evaluate(env) for arg in self.args]
+                return func.evaluate(env).evaluate(env,*evaluated_args)
+            
             if func:
-                evaluated_args = [arg.evaluate() for arg in self.args]
+                evaluated_args = [arg.evaluate(env) for arg in self.args]
                 return func.evaluate(*evaluated_args)
 
             raise ValueError("Invalid function call")
@@ -253,7 +257,7 @@ class LetIn(Expression):
         self.value_expression = value_expression
         self.body = body
 
-    def evaluate(self):
+    def evaluate(self,env):
         """
         Evaluates the let-in expression.
 
@@ -265,17 +269,18 @@ class LetIn(Expression):
             The result of evaluating the body of the let-in expression.
         """
         # Evaluate the value expression and create a new scope where the identifier is bound to the value.
-        value = self.value_expression.evaluate()
+        value = self.value_expression.evaluate(env)
         new_env = ENVIRONMENT.copy()
         new_env[self.identifier] = value
 
         # Evaluate the body in the new scope.
-        old_env = ENVIRONMENT
-        ENVIRONMENT = new_env
+        # old_env = ENVIRONMENT
+        # ENVIRONMENT = new_env
         try:
-            return self.body.evaluate()
+            return self.body.evaluate(new_env)
         finally:
-            ENVIRONMENT = old_env  # Restore the old environment
+            pass
+            # ENVIRONMENT = old_env  # Restore the old environment
 
 
 
@@ -312,7 +317,7 @@ class BinOp(Expression):
         self.op = op
         self.right = right
 
-    def evaluate(self, **kwargs):
+    def evaluate(self, env):
         """
         Evaluates the binary operation and returns the result.
 
@@ -325,29 +330,29 @@ class BinOp(Expression):
             ValueError: If the operator is not supported.
         """
         if self.op == '+':
-            return evaluate(self.left) + evaluate(self.right)
+            return evaluate(self.left,env) + evaluate(self.right,env)
         if self.op == '-':
-            return evaluate(self.left) - evaluate(self.right)
+            return evaluate(self.left,env) - evaluate(self.right,env)
         if self.op == '*':
-            return evaluate(self.left) * evaluate(self.right)
+            return evaluate(self.left,env) * evaluate(self.right,env)
         if self.op == '/':
-            return evaluate(self.left) / evaluate(self.right)
+            return evaluate(self.left,env) / evaluate(self.right,env)
         if self.op == '&&':
-            return evaluate(self.left) and evaluate(self.right)
+            return evaluate(self.left,env) and evaluate(self.right,env)
         if self.op == '||':
-            return evaluate(self.left) or evaluate(self.right) 
+            return evaluate(self.left,env) or evaluate(self.right,env) 
         if self.op == '->':
-            return not evaluate(self.left) or evaluate(self.right)
+            return not evaluate(self.left,env) or evaluate(self.right,env)
         if self.op == '>':
-            return evaluate(self.left) > evaluate(self.right) 
+            return evaluate(self.left,env) > evaluate(self.right,env) 
         if self.op == '<':
-            return evaluate(self.left) < evaluate(self.right)    
+            return evaluate(self.left,env) < evaluate(self.right,env)    
         if self.op == '>=':
-            return evaluate(self.left) >= evaluate(self.right)   
+            return evaluate(self.left,env) >= evaluate(self.right,env)   
         if self.op == '<=':
-            return evaluate(self.left) <= evaluate(self.right) 
+            return evaluate(self.left,env) <= evaluate(self.right,env) 
         if self.op == '==':
-            return evaluate(self.left) == evaluate(self.right) 
+            return evaluate(self.left,env) == evaluate(self.right,env) 
         raise ValueError(f'Unknown operator: {self.operator}')
 
 
@@ -374,7 +379,7 @@ class Number(Expression):
         except ValueError:
             self.value = float(value)
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
         """
         Evaluates the number, which in practice means returning the numeric value.
 
@@ -400,7 +405,7 @@ class String(Expression):
         """
         self.value = value
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
         """
         Evaluates the string, which in practice means returning the string value.
 
@@ -426,7 +431,7 @@ class Boolean(Expression):
         """
         self.value = bool(value)
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
         """
         Evaluates the boolean, which in practice means returning the boolean value.
 
@@ -453,7 +458,7 @@ class Identifier(Expression):
         """
         self.name = name
 
-    def evaluate(self, **kwargs):
+    def evaluate(self, env):
         """
         Evaluates the Identifier. If the identifier name is in the environment, its value is returned. 
         If the name corresponds to a function in the function dictionary, the name is returned. 
@@ -466,9 +471,11 @@ class Identifier(Expression):
 
         name = self.name
 
-        if self.name in ENVIRONMENT:
+        if self.name in env:
+            return env[self.name]
+        elif self.name in ENVIRONMENT:
             return ENVIRONMENT[self.name]
-        if self.name in FUNCTION_DICT:
+        elif self.name in FUNCTION_DICT:
             return FUNCTION_DICT[self.name]
         
         if "." in name:  # Check if func is a qualified function name
@@ -479,7 +486,7 @@ class Identifier(Expression):
 
         # if isinstance(self.name, FunctionCall):
         #     return self.name.evaluate()
-        return None
+        return name
 
 class UnaryOperation(Expression):
     """
@@ -500,7 +507,7 @@ class UnaryOperation(Expression):
         self.operator = operator
         self.operand = operand
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
         """
         Evaluates the UnaryOperation. If the operator is '-', the negation of the operand is returned.
         If the operator is 'not', the logical not of the operand is returned.
@@ -537,7 +544,7 @@ class While(Expression):
         self.condition = condition
         self.body = body
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
         """
         Evaluates the While loop. The condition is checked before each iteration. 
         If the condition is True, the body is executed, otherwise the loop is exited.
@@ -548,10 +555,10 @@ class While(Expression):
         Raises:
             None
         """
-        result = self.condition.evaluate()
+        result = self.condition.evaluate(env)
         while result != False:
-            result = self.body.evaluate()
-            if self.condition.evaluate() == False:
+            result = self.body.evaluate(env)
+            if self.condition.evaluate(env) == False:
                 break
         return result
 
@@ -577,7 +584,7 @@ class IfThenElse(Expression):
         self.true_expr = true_expr
         self.false_expr = false_expr
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
         """
         Evaluates the IfThenElse statement. 
 
@@ -612,7 +619,7 @@ class IfThen(Expression):
         self.condition = condition
         self.true_expr = true_expr
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
         """
         Evaluate the IfThen expression. If the condition is true, evaluate and return the true expression. 
         If the condition is false, return the last evaluated result in the environment. 
@@ -622,9 +629,9 @@ class IfThen(Expression):
                  or the last result in the environment if the condition is false.
         """
         # Evaluate the condition
-        if self.condition.evaluate():
+        if self.condition.evaluate(env):
             # If the condition is true, evaluate and return the true expression
-            return self.true_expr.evaluate()
+            return self.true_expr.evaluate(env)
         # elif '%lastresult%' in ENVIRONMENT:
         #     # If the condition is false, return the last evaluated result in the environment
         #     return ENVIRONMENT['%lastresult%']
@@ -648,7 +655,7 @@ class Lazy(Expression):
         self.is_evaluated = False  # Indicates if the function has been evaluated
         self.value = None  # Holds the result of the evaluation
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
         """
         Evaluate the Lazy expression if it hasn't been evaluated before. 
         The result is cached for future uses.
@@ -697,7 +704,7 @@ class Pipe(Expression):
         self.left = left
         self.right = right
 
-    def evaluate(self, **kwargs):
+    def evaluate(self,env):
         """
         Evaluate the Pipe expression. 
         The left expression is evaluated first and its result is fed as an argument to the right expression.
@@ -712,7 +719,7 @@ class Pipe(Expression):
         if isinstance(self.right,FunctionCall):
             func = self.right
             func.args.insert(0, self.left)
-            return func.evaluate()
+            return func.evaluate(env)
             # return l.evaluate(*func.args)
         
         if isinstance(self.right,Identifier):  
@@ -721,25 +728,25 @@ class Pipe(Expression):
                 if isinstance(ENVIRONMENT[name],FunctionCall):
                     func = ENVIRONMENT[name]
                     func.args.insert(0, self.left)
-                    l = func.evaluate()
+                    l = func.evaluate(env)
                     return l.evaluate(*func.args)
 
             elif isinstance(name,str) and name in FUNCTION_DICT:
                 func = FUNCTION_DICT[name]
                 if isinstance(func,LambdaFunction):        
-                    l = func.evaluate()
+                    l = func.evaluate(env)
                     return l.evaluate(self.left)
                 elif callable(func):
-                    return func(self.left.evaluate())
+                    return func(self.left.evaluate(env))
                 
         if isinstance(self.right,CurriedFunction):
             # function = self.right.func
             # args = self.right.args
             self.right.args[0].insert(0, self.left)
-            return self.right.evaluate()
+            return self.right.evaluate(env)
                         
         # Evaluate the right expression and return the result
-        return self.right.evaluate()
+        return self.right.evaluate(env)
 
 class LambdaFunctionValue(Expression):
     """
@@ -757,7 +764,7 @@ class LambdaFunctionValue(Expression):
         self.args = args
         self.body = body
 
-    def evaluate(self, *args):
+    def evaluate(self, env, *args):
         """
         Define the behavior of the LambdaFunctionValue instance when it's 'called' like a function.
         If the number of arguments provided during the call doesn't match the lambda function's arguments,
@@ -767,7 +774,7 @@ class LambdaFunctionValue(Expression):
         :return: Result of evaluating the lambda function's body with the provided arguments.
         """
 
-        print(f"evaluate: LambdaFunctionValue f:{self.func} a:{self.args} k:{args}")
+        print(f"evaluate: LambdaFunctionValue f:{self.body} a:{self.args} k:{args}")
 
         # Check if the number of arguments provided during the call matches the number of arguments the function accepts
         # if len(args) != len(self.args):
@@ -777,7 +784,7 @@ class LambdaFunctionValue(Expression):
         
         # Create a local environment where the arguments are bound to their values
         local_env = ENVIRONMENT.copy()
-        local_env.update(zip(self.args, args))
+        local_env.update(zip([arg.evaluate(env) for arg in self.args], args))
 
         body = self.body
         local_args = []
@@ -785,7 +792,7 @@ class LambdaFunctionValue(Expression):
             for arg in args:
                 value = arg
                 if isinstance(value,Evaluable):
-                    value = arg.evaluate()
+                    value = arg.evaluate(local_env)
                 local_args.append(value)
             return body(*local_args)
 
@@ -812,7 +819,7 @@ class LambdaFunction(Expression):
         self.args = args
         self.body = body
 
-    def evaluate(self):
+    def evaluate(self,env):
         """
         Evaluate the lambda function to a LambdaFunctionValue object which can be called like a function.
 
@@ -821,26 +828,6 @@ class LambdaFunction(Expression):
         print(f"evaluate: LambdaFunction f:{self.body} a:{self.args} ")
         return LambdaFunctionValue(self.args, self.body)
 
-
-# def InstrumentedFunctionCall(name,args,func):
-#     return func
-#     # return curry(func)
-
-# FUNCTION_DICT = {
-#     # This dictionary maps function names to FunctionDef instances that implement the function.
-
-#     # The 'out' function prints its argument and returns None. 
-#     # It's implemented with the 'print_func' function and curried to allow partial application.
-#     'out': InstrumentedFunctionCall('out', ['x'], (print_func)),
-
-#     # The 'add' function adds its two arguments. 
-#     # It's implemented with the 'add_func' function and curried to allow partial application.
-#     'add': InstrumentedFunctionCall('add', ['x', 'y'], (add_func)),
-
-#     # The 'eval' function evaluates its argument as a maryChain expression. 
-#     # It's implemented with the 'eval_func' function and curried to allow partial application.
-#     'eval': InstrumentedFunctionCall('eval', ['x'], (eval_func)),
-# }
 
 FUNCTION_DICT = {
     # This dictionary maps function names to FunctionDef instances that implement the function.
@@ -866,7 +853,7 @@ def inject_parsing(parse):
     FUNCTION_DICT['exec'] = (lambda x: evaluate(parse(x)))
     return 
 
-def evaluate(node):
+def evaluate(node, env={}):
     """
     The evaluate function is used to evaluate different types of nodes in an abstract syntax tree (AST).
     It returns the evaluated result of the node.
@@ -891,7 +878,7 @@ def evaluate(node):
     
     if isinstance(node, Evaluable):
         # If the node is an instance of Expression class, evaluate the expression and return the result
-        return node.evaluate()
+        return node.evaluate(env)
     
     # If the node is none of the above types, raise a ValueError
     raise ValueError(f'Unknown node type: {node}')

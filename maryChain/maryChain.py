@@ -278,17 +278,6 @@ def p_program(t):
             t[0] = Program(imports, t[2])
 
 # --------------------------------------------------------------
-#  import
-# def p_namespace(p):
-#     '''namespace : IDENTIFIER
-#                  | namespace DOT IDENTIFIER'''
-#     if len(p) == 2:
-#         # If namespace is a single identifier, make it a one-element list
-#         p[0] = [p[1]]
-#     else:
-#         # If namespace is another namespace followed by an identifier, 
-#         # append the identifier to the list of identifiers in the namespace
-#         p[0] = p[1] + [p[3]]
 
 def p_import(t):
     'import : IMPORT IDENTIFIER AS IDENTIFIER'
@@ -448,7 +437,7 @@ def p_lazy_expr(t):
 
 
 def p_expression_braces(t):
-    'expression : LCBRACE expression RCBRACE'
+    'term : LCBRACE term RCBRACE'
     """
     Handles the parsing of expressions within braces in the language.
 
@@ -466,7 +455,7 @@ def p_expression_braces(t):
 
 
 def p_expression_lambda(t):
-    'function_call : LAMBDA LPAREN args RPAREN expression'
+    'lambda : LAMBDA LPAREN args RPAREN expression'
     """
     Handles the parsing of lambda expressions in the language.
 
@@ -501,7 +490,8 @@ def p_expression_pipe(p):
     p[0] = Pipe(p[1], p[3])  # Create a new Pipe node.
 
 def p_expression_func_call(t):
-    'expression : function_call'
+    '''expression : function_call 
+                  | lambda'''
     """
     Handles the parsing of function calls in the language.
 
@@ -570,33 +560,10 @@ def p_error(t):
 # -------------------------------------------------------------------
 # Rule for function calls
 
-# def p_function_definition(t):
-#     'function_definition : FUNC IDENTIFIER LPAREN args RPAREN LCBRACE expression RCBRACE'
-#     """
-#     Parses function definition expressions.
-
-#     This function parses a function definition, which consists of the 'func' keyword,
-#     followed by an identifier (the function's name), parentheses enclosing arguments 
-#     (if any), and a block of code enclosed in curly braces. 
-
-#     After successful parsing, a FunctionDef object is constructed with the function name, 
-#     arguments, and the expression (body of the function) as arguments.
-
-#     Parameters:
-#     t: A PLY lex token instance. It is a tuple where t[2] is the function's name, t[4] is 
-#        the function's arguments, and t[7] is the body of the function (an expression).
-
-#     Returns:
-#     None
-#     """
-#     # FunctionDef is a hypothetical class to store function definitions. This will need to be 
-#     # defined elsewhere in your code. It takes the function name, the arguments, and the body 
-#     # of the function (an expression).
-#     t[0] = FunctionDef(t[2], t[4], t[7]) 
-
 def p_function_call(t):
     '''function_call : function_call LPAREN args RPAREN
                      | function_call LPAREN RPAREN
+                     | lambda LPAREN args RPAREN
                      | IDENTIFIER'''
     if len(t) == 4:
         # function_call LPAREN args RPAREN
@@ -610,6 +577,8 @@ def p_function_call(t):
         # Function call with arguments followed by another function call or identifier
         if isinstance(t[3], FunctionCall) or isinstance(t[3], Identifier):
             t[0] = FunctionCall(t[1], [t[3]])
+        elif isinstance(t[1],LambdaFunction):
+            t[0] = FunctionCall(t[1],t[3])
         else:
             # Handle currying
             t[0] = CurriedFunction(t[1], [t[3]])

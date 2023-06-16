@@ -10,7 +10,7 @@
                | "while" <expression> "do" <expression>
                | "lazy" <expression>
                | "{" <expression> "}"
-               | "lambda" "(" <args> ")" <expression>
+               | lambda
                | <expression> "|" <expression>
 
 <boolean_expression> ::= <arithmetic_expression> 
@@ -95,6 +95,15 @@ assertion("'hello' | out","hello")
 assertion("add(1)(2)",3)  # Function call with 2 arguments
 assertion("add(1,1)",2)  # Function call with 2 arguments
 assertion("add(1)(2)",3)  # Integer literal
+
+assertion("add({1})(2)",3)  # Function call with 2 arguments
+assertion("add({1},2)",3)  # Function call with 2 arguments
+assertion("add({1})(2)",3)  # Integer literal
+
+assertion("add(1)({2})",3)  # Function call with 2 arguments
+assertion("add(1,{2})",3)  # Function call with 2 arguments
+assertion("add(1)({2})",3)  # Integer literal
+
 assertion("3*add(1,1)",6)  # Mixing arithmetic and function calls
 assertion("add(1,add(1,1))",3)  # Nested function calls
 assertion("{1}",1)  # Expression in braces
@@ -124,7 +133,6 @@ assertion("lazy (1+2)*2", 6)  # Lazy evaluation with more complex expression
 assertion("lazy if true then 1 else 2", 1)  # Lazy evaluation with if-then-else statement
 assertion("out('world')|out", "world")  # Print function piped into another print function
 
-assertion(f"""import library as core""",None)
 assertion(f"""exec('3')""",3)
 assertion(f"""exec('add(1,add(2,3))')""",6)
 assertion(f"""
@@ -136,13 +144,10 @@ assertion("('hello' | out) | out ","hello")
 assertion("'hello' | out | out ","hello")
 assertion("'hello' | out | out | out","hello")
 
-# assertion(f"""import Workers.functions as core""",None)
+assertion("lambda (x) x*2 (3)", 6)  # Lambda function application
+assertion("while false do 1", False)  # While statement with false condition
 
-# assertion("lambda (x) x*2", (mc.eval("lambda (x) x*2")))  # Lambda function definition
-assertion("lambda (x) x*2 3", 6)  # Lambda function application
-# assertion("while false do 1", None)  # While statement with false condition
-
-# assertion("let x = 5 in x", 5)  # Let-in expression
+assertion("let x = 5 in x", 5)  # Let-in expression
 # assertion("let x = 5 in x*2", 10)  # Let-in expression with use of defined variable
 # assertion("let x = 5 in let y = 2 in x*y", 10)  # Nested let-in expressions
 # assertion("let x = 5 in let x = 2 in x", 2)  # Shadowing in let-in expressions
@@ -191,6 +196,9 @@ assertion("lambda (x) x*2 3", 6)  # Lambda function application
 # assertion("'hello'|out(_)",'hello')
 # assertion("1|_",1)
 
+# assertion(f"""import library as core""",None)
+# assertion(f"""import Workers.functions as core""",None)
+# assertion("lambda (x) x*2", (mc.eval("lambda (x) x*2")))  # Lambda function definition
 while True:
     """
     Main loop of the program.
