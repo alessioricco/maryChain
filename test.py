@@ -82,13 +82,7 @@ def assertion(s, expected):
     else:
         print(f"FAIL: {s} => {result}, expected {expected}")
 
-assertion("'hello' | out","hello")
-assertion("('hello' | out) | out ","hello")
-assertion("'hello' | out | out ","hello")
-assertion("'hello' | out | out | out","hello")
 
-# assertion("add(1)",1)  # Integer literal
-# assertion("add(1)(2)",3)  # Integer literal
 
 assertion("1",1)  # Integer literal
 assertion("1+1",2)  # Integer addition
@@ -96,8 +90,11 @@ assertion("(1)",1)  # Integer literal with parentheses
 assertion("(1+1)",2)  # Integer addition with parentheses
 assertion("1+(1+1)",3)  # More complex integer addition with parentheses
 assertion("1+3*2+1",8)  # Addition and multiplication
-assertion("add(1,1)",2)  # Function call with 2 arguments
 assertion("1|add(2)",3)  # Using the pipe operator with function call
+assertion("'hello' | out","hello")
+assertion("add(1)(2)",3)  # Function call with 2 arguments
+assertion("add(1,1)",2)  # Function call with 2 arguments
+assertion("add(1)(2)",3)  # Integer literal
 assertion("3*add(1,1)",6)  # Mixing arithmetic and function calls
 assertion("add(1,add(1,1))",3)  # Nested function calls
 assertion("{1}",1)  # Expression in braces
@@ -135,11 +132,14 @@ assertion(f"""
           m.sqrt(9)
           """,3)
 
+assertion("('hello' | out) | out ","hello")
+assertion("'hello' | out | out ","hello")
+assertion("'hello' | out | out | out","hello")
 
 # assertion(f"""import Workers.functions as core""",None)
 
-# assertion("lambda (x) x*2", "<lambda function>")  # Lambda function definition
-# assertion("(lambda (x) x*2)(3)", 6)  # Lambda function application
+# assertion("lambda (x) x*2", (mc.eval("lambda (x) x*2")))  # Lambda function definition
+assertion("lambda (x) x*2 3", 6)  # Lambda function application
 # assertion("while false do 1", None)  # While statement with false condition
 
 # assertion("let x = 5 in x", 5)  # Let-in expression

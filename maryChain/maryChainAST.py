@@ -2,12 +2,15 @@ from abc import ABC, abstractmethod
 import importlib
 import inspect
 import sys, os
-import types
+from functools import partial, wraps
 
-core_lib = os.path.dirname(os.path.realpath(__file__)) + '/../Workers'
-sys.path.append("/Users/alessioricco/Documents/GitHub/GPTWorkers")
-print(sys.path)
+# core_lib = os.path.dirname(os.path.realpath(__file__)) + '/../Workers'
+# sys.path.append("/Users/alessioricco/Documents/GitHub/GPTWorkers")
+# print(sys.path)
 
+def curry_builtin(func):
+    # Define a lambda that wraps the built-in function
+    return lambda *args, **kwargs: func(*args, **kwargs)
 
 def add_module_functions_to_dict(module_name,alias):
     # core.hello()
@@ -25,7 +28,8 @@ def add_module_functions_to_dict(module_name,alias):
                 args = inspect.getfullargspec(func).args
             except:
                 args = []
-            FUNCTION_DICT[alias][name]=FunctionDef(name,args,curry(func))
+            FUNCTION_DICT[alias][name]=curry_builtin(func)
+            # FUNCTION_DICT[alias][name]=FunctionDef(name,args,curry(func))
 
 
 
@@ -73,14 +77,12 @@ class Expression(Evaluable):
     pass
 
 class Program(Evaluable):
-    def __init__(self, definitions, imports, expression):
-        self.definitions = definitions
+    def __init__(self, imports, expression):
+
         self.imports = imports
         self.expression = expression
 
     def evaluate(self):
-        for definition in self.definitions:
-            definition.evaluate()
 
         for import_stmt in self.imports:
             import_stmt.evaluate()
@@ -102,67 +104,55 @@ class Import(Expression):
 # --------------------------------------------------------------
 #  external functions
 def print_func(x):
-    if isinstance(x, Lazy):
-        x = x.evaluate()
+    # if isinstance(x, Lazy):
+    #     x = x.evaluate()
     print(x)
     return x
 
 def add_func(x, y):
-    if isinstance(x, Lazy):
-        x = x.evaluate()
-    if isinstance(y, Lazy):
-        y = y.evaluate()
+    # if isinstance(x, Lazy):
+    #     x = x.evaluate()
+    # if isinstance(y, Lazy):
+    #     y = y.evaluate()
     return x + y
 
 def eval_func(x):
     return x.func()
 
+
+
+
 def curry(func):
-    """
-    This function transforms a given function into a curried function.
-    
-    Currying is a technique in functional programming where a function with multiple arguments is 
-    transformed into a sequence of functions, each with a single argument. 
-    For example, a function of two arguments, f(x, y), produces a function of one argument, g(y) = f(x, y), 
-    which can be called with one argument to produce the result.
+    if isinstance(func, partial):
+        # Handle functools.partial objects
+        num_required_args = func.func.__code__.co_argcount
+        num_wrapped_args = len(func.args) + len(func.keywords)
 
-    Parameters:
-    func (function): The function to be curried.
+        @wraps(func)
+        def curried(*args, **kwargs):
+            all_args = func.args + args
+            all_kwargs = {**func.keywords, **kwargs}
+            evaluated_args = [arg.evaluate() if isinstance(arg,Evaluable) else arg for arg in args]
 
-    Returns:
-    function: The curried version of the original function.
-    """
-    
-    def curried(*args, **kwargs):
-        """
-        This function represents the curried version of the original function.
-        
-        It tries to call the original function with the provided arguments. 
-        If a TypeError occurs because one argument is missing, it returns a new function that 
-        takes one argument and calls the original function with the previously provided arguments 
-        and this new argument.
-        """
-        try:
-            return func(*args, **kwargs)
-        except TypeError as e:
-            if 'missing 1 required positional argument' in str(e):
-                return lambda x: func(*args, x, **kwargs)
+            if len(all_args) + len(all_kwargs) >= num_required_args:
+                return func(*evaluated_args, **all_kwargs)
             else:
-                raise e
+                return curry(partial(func.func, *evaluated_args, **all_kwargs))
 
-    return curried  # Return the curried function.
+        return curried
+    else:
+        # Handle regular functions
+        num_required_args = func.__code__.co_argcount
 
+        @wraps(func)
+        def curried(*args, **kwargs):
+            evaluated_args = [arg.evaluate() if isinstance(arg,Evaluable) else arg for arg in args]
+            if len(args) + len(kwargs) >= num_required_args:
+                return func(*evaluated_args, **kwargs)
+            else:
+                return curry(partial(func, *evaluated_args, **kwargs))
 
-# def curry(func):
-#     def curried(*args, **kwargs):
-#         if len(args) + len(kwargs) >= func.__code__.co_argcount:
-#             return func(*args, **kwargs)
-#         else:
-#             # Return a new FunctionDef instance
-#             return FunctionDef(func.__name__, func.__code__.co_varnames[len(args):], curried)
-#     return curried
-
-
+        return curried
 
 # --------------------------------------------------------------
 #  environment
@@ -171,131 +161,72 @@ ENVIRONMENT = {}
 
 # --------------------------------------------------------------
 
-class FunctionDef:
-    """
-    Represents a function definition in the maryChain language. Functions can either be user-defined or 
-    built-in functions.
-    """
-
-    def __init__(self, name, args, body):
-        """
-        Initialize a function definition with a name, a list of argument names, and a body.
-        
-        Parameters:
-        name (str): The name of the function.
-        args (list): The names of the arguments of the function.
-        body (expression): The body of the function which can be an expression or a Python callable 
-                           (for built-in functions).
-        """
-        self.name = name
+class CurriedFunction(Expression):
+    def __init__(self, func, args):
+        self.func = func
         self.args = args
-        self.expected_args = len(args)
-
-        # Check if the body is a function, in which case this is a built-in function
-        if callable(body):
-            self.is_builtin = True
-            self.func = body
-        else:
-            self.is_builtin = False
-            self.body = body
 
     def evaluate(self, **kwargs):
-        """
-        Evaluates the function definition by adding it to the global environment and returning itself.
-        
-        Returns:
-        FunctionDef: This function definition.
-        """
-        if len(self.args) == 0:
-            return self.body
-        ENVIRONMENT[self.name] = self
-        return self
 
-    # def __call__(self, *args):
-        """
-        Defines how the function definition behaves when called. If the function is built-in, it simply 
-        calls the function with the provided arguments. Otherwise, it updates the local environment with 
-        the function arguments and evaluates the body of the function in this environment.
+        print(f"evaluate: CurriedFunction f:{self.func} a:{self.args} k:{kwargs}")
 
-        If not all arguments are provided, it returns a new function that takes the remaining arguments.
+        # Apply currying to the function being curried
+        curried_func = curry(self.func.evaluate())
 
-        Parameters:
-        args (list): The arguments to call the function with.
+        # Apply the partially applied arguments to the curried function
+        # evaluated_args = [arg.evaluate() for arg in self.args]
+        evaluated_args = []
+        args0 = self.args[0]
+        for arg in args0:
 
-        Returns:
-        expression: The result of evaluating the function body.
-        """
-        # if self.is_builtin:
-        #     return self.func(*args)
-        
-        # if len(args) > len(self.args):
-        #     raise TypeError(f"{self.name} takes {len(self.args)} arguments but {len(args)} were given")
+            if isinstance(arg,list) and isinstance(arg[0],Evaluable):
+                evaluated_args.append(arg)
+                continue
 
-        # # Make a copy of the global environment and update it with the function arguments
-        # local_env = ENVIRONMENT.copy()
-        # local_env.update(zip(self.args, args))
+            if isinstance(arg,Evaluable):
+                evaluated_args.append(arg)
+                continue
+            
+            evaluated_args.append(arg)
 
-        # if len(args) < len(self.args):
-        #     # Not all arguments provided, return a new function that takes the remaining arguments
-        #     remaining_args = self.args[len(args):]
-        #     return curry(FunctionDef(self.name, remaining_args, self.body).evaluate(local_env))
-
-        # # Evaluate the body of the function in the local environment and return the result
-        # return self.body.evaluate(local_env)
-
-    def __call__(self,*args):
-        if self.is_builtin:
-            return curry(self.func)(*args)
-        if len(args)>len(self.args):
-            raise TypeError(f"{self.name} takes {len(self.args)} arguments but {len(args)} were given")
-        local_env=ENVIRONMENT.copy()
-        local_env.update(zip(self.args,args))
-        if len(args)<len(self.args):
-            remaining_args=self.args[len(args):]
-            return curry(FunctionDef(self.name,remaining_args,self.body).evaluate(local_env))
-        return self.body.evaluate(local_env)
+        return curried_func(*evaluated_args)
 
 class FunctionCall(Expression):
     def __init__(self, func, args):
         self.func = func
         self.args = args
 
+    '''function_call : function_call LPAREN args RPAREN
+                     | function_call LPAREN RPAREN
+                     | IDENTIFIER'''
+
     def evaluate(self, **kwargs):
-        func = None
-        if isinstance(self.func, Identifier):
-            # Look up function by name
-            name = self.func.name
-            if self.func.name in ENVIRONMENT:
-                func = ENVIRONMENT[self.func.name]
-            else:
-                # namespace
-                if "." in name:  # Check if func is a qualified function name
-                    module_name, func_name = name.split(".")
-                    if (module_name not in FUNCTION_DICT) or (func_name not in FUNCTION_DICT[module_name]):
-                        raise ValueError(f"Function {self.func} is not defined")
-                    func = FUNCTION_DICT[module_name][func_name]
+            print(f"evaluate: FunctionCall f:{self.func} a:{self.args} k:{kwargs}")
+            func = None
+
+            # Check if it's a curried function
+            if isinstance(self.func, CurriedFunction):
+                func = self.func
+
+            # Check if it's an Identifier
+            elif isinstance(self.func, Identifier):
+                ident = self.func.evaluate()
+                if isinstance(ident, CurriedFunction):
+                    func = ident
+                elif isinstance(ident, FunctionCall):
+                    func = ident
                 else:
-                    func = FUNCTION_DICT[self.func.name]
-        elif isinstance(self.func, FunctionCall):
-            # Evaluate inner function call to get function
-            func = self.func.evaluate()
-        else:
-            raise ValueError(f"Function {self.func} is not defined")
+                    raise ValueError(f"Identifier {self.func.name} is not a function or lambda")
 
-        if func.is_builtin:
-            # If the function is a built-in function, call it with the provided arguments
-            # This will raise an exception if there are too few arguments
-            evaluated_args = [arg.evaluate() for arg in self.args]
-            return func(*evaluated_args)
-        else:
-            # If the function is a user-defined function and there are too few arguments, return a new FunctionDef for currying
-            if len(self.args) < func.expected_args:
-                return FunctionDef(func.name, func.args[len(self.args):], func.body)
+            # Check if it's a regular FunctionCall
+            elif isinstance(self.func, FunctionCall):
+                func = self.func
 
-            # If there are enough arguments, evaluate the function call as normal
-            evaluated_args = [arg.evaluate() for arg in self.args]
-            return func(*evaluated_args)
+            if func:
+                evaluated_args = [arg.evaluate() for arg in self.args]
+                return func.evaluate(*evaluated_args)
 
+            raise ValueError("Invalid function call")
 
 class LetIn(Expression):
     """
@@ -532,14 +463,23 @@ class Identifier(Expression):
             The value of the Identifier if it exists in the environment, its name if it exists in the function dictionary,
             or the result of its evaluation if it is a FunctionCall.
         """
+
+        name = self.name
+
         if self.name in ENVIRONMENT:
             return ENVIRONMENT[self.name]
         if self.name in FUNCTION_DICT:
-            return self.name
-        if isinstance(self.name, FunctionCall):
-            return self.name.evaluate()
-        return None
+            return FUNCTION_DICT[self.name]
+        
+        if "." in name:  # Check if func is a qualified function name
+            module_name, func_name = name.split(".")
+            if (module_name not in FUNCTION_DICT) or (func_name not in FUNCTION_DICT[module_name]):
+                raise ValueError(f"Function {self.func} is not defined")
+            return FUNCTION_DICT[module_name][func_name]
 
+        # if isinstance(self.name, FunctionCall):
+        #     return self.name.evaluate()
+        return None
 
 class UnaryOperation(Expression):
     """
@@ -615,7 +555,6 @@ class While(Expression):
                 break
         return result
 
-    
 class IfThenElse(Expression):
     """
     This class represents a conditional "if-then-else" statement in the maryChain language.
@@ -657,7 +596,6 @@ class IfThenElse(Expression):
         else:
             return evaluate(self.false_expr)
 
-        
 class IfThen(Expression):
     """
     The IfThen class represents a conditional expression in a programming language. 
@@ -687,14 +625,12 @@ class IfThen(Expression):
         if self.condition.evaluate():
             # If the condition is true, evaluate and return the true expression
             return self.true_expr.evaluate()
-        elif '%lastresult%' in ENVIRONMENT:
-            # If the condition is false, return the last evaluated result in the environment
-            return ENVIRONMENT['%lastresult%']
+        # elif '%lastresult%' in ENVIRONMENT:
+        #     # If the condition is false, return the last evaluated result in the environment
+        #     return ENVIRONMENT['%lastresult%']
         else:
             # If there is no last result in the environment, return None
             return None  
-
-
 
 class Lazy(Expression):
     """
@@ -745,7 +681,6 @@ class Lazy(Expression):
             # If the function hasn't been evaluated
             return "<Unevaluated lazy object>"
 
-
 class Pipe(Expression):
     """
     The Pipe class represents a pipeline operation in a programming language.
@@ -770,14 +705,41 @@ class Pipe(Expression):
         :return: Result of evaluating the right expression with the result of the left expression.
         """
         # Evaluate the left expression and store its result in a special variable '%lastresult%'
-        ENVIRONMENT['%lastresult%'] = self.left.evaluate()
+        # ENVIRONMENT['%lastresult%'] = self.left.evaluate()
 
         # Insert the result of the left expression as the first argument of the right expression
-        self.right.args.insert(0, self.left)
+        func = None
+        if isinstance(self.right,FunctionCall):
+            func = self.right
+            func.args.insert(0, self.left)
+            return func.evaluate()
+            # return l.evaluate(*func.args)
+        
+        if isinstance(self.right,Identifier):  
+            name = self.right.name  
+            if isinstance(name,str) and name in ENVIRONMENT:
+                if isinstance(ENVIRONMENT[name],FunctionCall):
+                    func = ENVIRONMENT[name]
+                    func.args.insert(0, self.left)
+                    l = func.evaluate()
+                    return l.evaluate(*func.args)
 
+            elif isinstance(name,str) and name in FUNCTION_DICT:
+                func = FUNCTION_DICT[name]
+                if isinstance(func,LambdaFunction):        
+                    l = func.evaluate()
+                    return l.evaluate(self.left)
+                elif callable(func):
+                    return func(self.left.evaluate())
+                
+        if isinstance(self.right,CurriedFunction):
+            # function = self.right.func
+            # args = self.right.args
+            self.right.args[0].insert(0, self.left)
+            return self.right.evaluate()
+                        
         # Evaluate the right expression and return the result
         return self.right.evaluate()
-
 
 class LambdaFunctionValue(Expression):
     """
@@ -795,7 +757,7 @@ class LambdaFunctionValue(Expression):
         self.args = args
         self.body = body
 
-    def __call__(self, *args):
+    def evaluate(self, *args):
         """
         Define the behavior of the LambdaFunctionValue instance when it's 'called' like a function.
         If the number of arguments provided during the call doesn't match the lambda function's arguments,
@@ -804,17 +766,34 @@ class LambdaFunctionValue(Expression):
         :param args: The arguments provided during the function call.
         :return: Result of evaluating the lambda function's body with the provided arguments.
         """
-        # Check if the number of arguments provided during the call matches the number of arguments the function accepts
-        if len(args) != len(self.args):
-            raise TypeError("wrong number of arguments")
 
+        print(f"evaluate: LambdaFunctionValue f:{self.func} a:{self.args} k:{args}")
+
+        # Check if the number of arguments provided during the call matches the number of arguments the function accepts
+        # if len(args) != len(self.args):
+        #     raise TypeError("wrong number of arguments")
+        if len(args) > len(self.args):
+            raise TypeError("wrong number of arguments")
+        
         # Create a local environment where the arguments are bound to their values
         local_env = ENVIRONMENT.copy()
         local_env.update(zip(self.args, args))
 
-        # Evaluate the function's body in the local environment and return the result
-        return self.body.evaluate(local_env)
+        body = self.body
+        local_args = []
+        if callable(body):
+            for arg in args:
+                value = arg
+                if isinstance(value,Evaluable):
+                    value = arg.evaluate()
+                local_args.append(value)
+            return body(*local_args)
 
+        # Evaluate the function's body in the local environment and return the result
+        return body.evaluate(local_env)
+    
+    # def evaluate(self):
+    #     pass
 
 
 class LambdaFunction(Expression):
@@ -839,23 +818,44 @@ class LambdaFunction(Expression):
 
         :return: A LambdaFunctionValue object that represents the lambda function.
         """
+        print(f"evaluate: LambdaFunction f:{self.body} a:{self.args} ")
         return LambdaFunctionValue(self.args, self.body)
 
+
+# def InstrumentedFunctionCall(name,args,func):
+#     return func
+#     # return curry(func)
+
+# FUNCTION_DICT = {
+#     # This dictionary maps function names to FunctionDef instances that implement the function.
+
+#     # The 'out' function prints its argument and returns None. 
+#     # It's implemented with the 'print_func' function and curried to allow partial application.
+#     'out': InstrumentedFunctionCall('out', ['x'], (print_func)),
+
+#     # The 'add' function adds its two arguments. 
+#     # It's implemented with the 'add_func' function and curried to allow partial application.
+#     'add': InstrumentedFunctionCall('add', ['x', 'y'], (add_func)),
+
+#     # The 'eval' function evaluates its argument as a maryChain expression. 
+#     # It's implemented with the 'eval_func' function and curried to allow partial application.
+#     'eval': InstrumentedFunctionCall('eval', ['x'], (eval_func)),
+# }
 
 FUNCTION_DICT = {
     # This dictionary maps function names to FunctionDef instances that implement the function.
 
     # The 'out' function prints its argument and returns None. 
     # It's implemented with the 'print_func' function and curried to allow partial application.
-    'out': FunctionDef('out', ['x'], curry(print_func)),
+    'out': (print_func),
 
     # The 'add' function adds its two arguments. 
     # It's implemented with the 'add_func' function and curried to allow partial application.
-    'add': FunctionDef('add', ['x', 'y'], curry(add_func)),
+    'add': (add_func),
 
     # The 'eval' function evaluates its argument as a maryChain expression. 
     # It's implemented with the 'eval_func' function and curried to allow partial application.
-    'eval': FunctionDef('eval', ['x'], curry(eval_func)),
+    'eval': (eval_func),
 }
 
 # def exec(s):
@@ -863,7 +863,7 @@ FUNCTION_DICT = {
 #     return evaluate(node)
 
 def inject_parsing(parse):
-    FUNCTION_DICT['exec'] = FunctionDef('exec', ['s'], curry(lambda x: evaluate(parse(x))))
+    FUNCTION_DICT['exec'] = (lambda x: evaluate(parse(x)))
     return 
 
 def evaluate(node):
@@ -897,3 +897,6 @@ def evaluate(node):
     raise ValueError(f'Unknown node type: {node}')
 
 
+# x = FunctionCallAsLambda('add', ['x', 'y'], (add_func))
+# args = [1,2]
+# x.evaluate().evaluate(*args)
