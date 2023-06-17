@@ -1,12 +1,54 @@
 from abc import ABC, abstractmethod
 import importlib
 import inspect
-import sys, os
+# import sys, os
 from functools import partial, wraps
 
-# core_lib = os.path.dirname(os.path.realpath(__file__)) + '/../Workers'
-# sys.path.append("/Users/alessioricco/Documents/GitHub/GPTWorkers")
-# print(sys.path)
+# --------------------------------------------------------------
+
+def curry(func):
+    if isinstance(func, partial):
+        # Handle functools.partial objects
+        num_required_args = func.func.__code__.co_argcount
+        num_wrapped_args = len(func.args) + len(func.keywords)
+
+        @wraps(func)
+        def curried(*args, **kwargs):
+            all_args = func.args + args
+            all_kwargs = {**func.keywords, **kwargs}
+            evaluated_args = [arg.evaluate({}) if isinstance(arg,Evaluable) else arg for arg in args]
+
+            if len(all_args) + len(all_kwargs) >= num_required_args:
+                return func(*evaluated_args, **all_kwargs)
+            else:
+                return curry(partial(func.func, *evaluated_args, **all_kwargs))
+
+        return curried
+    elif isinstance(func, LambdaFunctionValue):
+        num_required_args = len(func.args)
+
+        @wraps(func)
+        def curried(*args, **kwargs):
+            evaluated_args = [arg.evaluate({}) if isinstance(arg,Evaluable) else arg for arg in args]
+            if len(args) + len(kwargs) >= num_required_args:
+                # return func(*evaluated_args, **kwargs)
+                return func.evaluate({},*evaluated_args)
+            else:
+                return curry(partial(func, *evaluated_args, **kwargs))
+        return curried
+    else:
+        # Handle regular functions
+        num_required_args = func.__code__.co_argcount
+
+        @wraps(func)
+        def curried(*args, **kwargs):
+            evaluated_args = [arg.evaluate({}) if isinstance(arg,Evaluable) else arg for arg in args]
+            if len(args) + len(kwargs) >= num_required_args:
+                return func(*evaluated_args, **kwargs)
+            else:
+                return curry(partial(func, *evaluated_args, **kwargs))
+
+        return curried
 
 def curry_builtin(func):
     # Define a lambda that wraps the built-in function
@@ -30,7 +72,6 @@ def add_module_functions_to_dict(module_name,alias):
                 args = []
             FUNCTION_DICT[alias][name]=curry_builtin(func)
             # FUNCTION_DICT[alias][name]=FunctionDef(name,args,curry(func))
-
 
 
 # Now you can add the functions of a module to the FUNCTION_DICT like this:
@@ -100,75 +141,13 @@ class Import(Expression):
         add_module_functions_to_dict(self.module_name, self.alias)
 
 
-# --------------------------------------------------------------
-#  external functions
-def print_func(x):
-    if isinstance(x, Lazy):
-        x = x.evaluate()
-    print(x)
-    return x
-
-def add_func(x, y):
-    if isinstance(x, Lazy):
-        x = x.evaluate()
-    if isinstance(y, Lazy):
-        y = y.evaluate()
-    return x + y
-
-def eval_func(x):
-    return x.func()
 
 
-
-
-def curry(func):
-    if isinstance(func, partial):
-        # Handle functools.partial objects
-        num_required_args = func.func.__code__.co_argcount
-        num_wrapped_args = len(func.args) + len(func.keywords)
-
-        @wraps(func)
-        def curried(*args, **kwargs):
-            all_args = func.args + args
-            all_kwargs = {**func.keywords, **kwargs}
-            evaluated_args = [arg.evaluate({}) if isinstance(arg,Evaluable) else arg for arg in args]
-
-            if len(all_args) + len(all_kwargs) >= num_required_args:
-                return func(*evaluated_args, **all_kwargs)
-            else:
-                return curry(partial(func.func, *evaluated_args, **all_kwargs))
-
-        return curried
-    elif isinstance(func, LambdaFunctionValue):
-        num_required_args = len(func.args)
-
-        @wraps(func)
-        def curried(*args, **kwargs):
-            evaluated_args = [arg.evaluate({}) if isinstance(arg,Evaluable) else arg for arg in args]
-            if len(args) + len(kwargs) >= num_required_args:
-                # return func(*evaluated_args, **kwargs)
-                return func.evaluate({},*evaluated_args)
-            else:
-                return curry(partial(func, *evaluated_args, **kwargs))
-        return curried
-    else:
-        # Handle regular functions
-        num_required_args = func.__code__.co_argcount
-
-        @wraps(func)
-        def curried(*args, **kwargs):
-            evaluated_args = [arg.evaluate({}) if isinstance(arg,Evaluable) else arg for arg in args]
-            if len(args) + len(kwargs) >= num_required_args:
-                return func(*evaluated_args, **kwargs)
-            else:
-                return curry(partial(func, *evaluated_args, **kwargs))
-
-        return curried
 
 # --------------------------------------------------------------
 #  environment
 
-ENVIRONMENT = {'?':None}
+ENVIRONMENT = {'👽':'Alessio Ricco'}
 
 # --------------------------------------------------------------
 
@@ -581,12 +560,14 @@ class While(Expression):
         #     result = self.body.evaluate(env)
         #     if self.condition.evaluate(env) == False:
         #         break
-        # result = self.condition.evaluate(env)
-        while self.condition.evaluate(env):
-            result = self.body.evaluate(env)
+        b_result = None
+        c_result = self.condition.evaluate(env)
+        while c_result:
+            b_result = self.body.evaluate(env)
+            c_result = self.condition.evaluate(env)
             # if self.condition.evaluate(env) == False:
             #     break
-        return result
+        return b_result
 
 class IfThenElse(Expression):
     """
@@ -854,13 +835,28 @@ class LambdaFunction(Expression):
         print(f"evaluate: LambdaFunction f:{self.body} a:{self.args} ")
         return LambdaFunctionValue(self.args, self.body)
 
+def out_func(x):
+    if isinstance(x, Lazy):
+        x = x.evaluate()
+    print(x)
+    return x
+
+def add_func(x, y):
+    if isinstance(x, Lazy):
+        x = x.evaluate()
+    if isinstance(y, Lazy):
+        y = y.evaluate()
+    return x + y
+
+# def eval_func(x):
+#     return x.func()
 
 FUNCTION_DICT = {
     # This dictionary maps function names to FunctionDef instances that implement the function.
 
     # The 'out' function prints its argument and returns None. 
     # It's implemented with the 'print_func' function and curried to allow partial application.
-    'out': (print_func),
+    'out': (out_func),
 
     # The 'add' function adds its two arguments. 
     # It's implemented with the 'add_func' function and curried to allow partial application.
@@ -868,12 +864,8 @@ FUNCTION_DICT = {
 
     # The 'eval' function evaluates its argument as a maryChain expression. 
     # It's implemented with the 'eval_func' function and curried to allow partial application.
-    'eval': (eval_func),
+    # 'eval': (eval_func),
 }
-
-# def exec(s):
-#     node = None
-#     return evaluate(node)
 
 def inject_parsing(parse):
     FUNCTION_DICT['exec'] = (lambda x: evaluate(parse(x)))
@@ -908,8 +900,3 @@ def evaluate(node, env=ENVIRONMENT):
     
     # If the node is none of the above types, raise a ValueError
     raise ValueError(f'Unknown node type: {node}')
-
-
-# x = FunctionCallAsLambda('add', ['x', 'y'], (add_func))
-# args = [1,2]
-# x.evaluate().evaluate(*args)

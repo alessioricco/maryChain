@@ -1,42 +1,5 @@
 '''BNF
-<program> ::= <defn>* <expr>?
-<expression> ::= <term>
-              | <term> "+" <expression>
-              | <term> "-" <expression>
-              | <term> "*" <expression>
-              | <term> "/" <expression>
-              | "(" <expression> ")"
-              | <term> "==" <expression>
-              | <term> "<" <expression>
-              | <term> ">" <expression>
-              | <term> "<=" <expression>
-              | <term> ">=" <expression>
-              | "if" <expression> "then" <expression> "else" <expression>
-              | "while" <expression> "do" <expression>
-              | "lazy" <expression>
-              | "{" <expression> "}"
-              | "lambda" "(" <args> ")" <expression>
-              | <expression> "|" <expression>
 
-<term> ::= <factor>
-        | <string>
-        | <number>
-        | <boolean>
-        | <function_call>
-
-<factor> ::= <number>
-           | <string>
-           | "true"
-           | "false"
-
-<function_call> ::= <function_call> "(" <args> ")"
-                  | <identifier> "(" <args> ")"
-                  | <identifier>
-
-<args> ::= <arg>
-         | <args> "," <arg>
-
-<arg> ::= <expression>
 '''
 
 # Importing necessary libraries
