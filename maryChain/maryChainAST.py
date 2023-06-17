@@ -100,7 +100,6 @@ class Import(Expression):
         add_module_functions_to_dict(self.module_name, self.alias)
 
 
-
 # --------------------------------------------------------------
 #  external functions
 def print_func(x):
@@ -139,6 +138,18 @@ def curry(func):
             else:
                 return curry(partial(func.func, *evaluated_args, **all_kwargs))
 
+        return curried
+    elif isinstance(func, LambdaFunctionValue):
+        num_required_args = len(func.args)
+
+        @wraps(func)
+        def curried(*args, **kwargs):
+            evaluated_args = [arg.evaluate({}) if isinstance(arg,Evaluable) else arg for arg in args]
+            if len(args) + len(kwargs) >= num_required_args:
+                # return func(*evaluated_args, **kwargs)
+                return func.evaluate({},*evaluated_args)
+            else:
+                return curry(partial(func, *evaluated_args, **kwargs))
         return curried
     else:
         # Handle regular functions
@@ -283,7 +294,16 @@ class LetIn(Expression):
             pass
             # ENVIRONMENT = old_env  # Restore the old environment
 
+class Assignment(Expression):
+    def __init__(self, identifier, value_expression):
+        self.identifier = identifier
+        self.value_expression = value_expression
 
+    def evaluate(self,env):
+        value = self.value_expression.evaluate(env)
+        # new_env = env.copy()
+        env[self.identifier] = value
+        return value
 
 class BinOp(Expression):
     """
@@ -556,11 +576,16 @@ class While(Expression):
         Raises:
             None
         """
-        result = self.condition.evaluate(env)
-        while result != False:
+        # result = self.condition.evaluate(env)
+        # while result != False:
+        #     result = self.body.evaluate(env)
+        #     if self.condition.evaluate(env) == False:
+        #         break
+        # result = self.condition.evaluate(env)
+        while self.condition.evaluate(env):
             result = self.body.evaluate(env)
-            if self.condition.evaluate(env) == False:
-                break
+            # if self.condition.evaluate(env) == False:
+            #     break
         return result
 
 class IfThenElse(Expression):

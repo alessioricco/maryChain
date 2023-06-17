@@ -42,7 +42,7 @@
 # Importing necessary libraries
 from ply import lex, yacc
 from maryChain.maryChainAST import Program, BinOp, UnaryOperation, Number, String, Boolean, Identifier, LetIn, LambdaFunction
-from maryChain.maryChainAST import FunctionCall, While, IfThenElse, IfThen, Lazy, Pipe, Import, CurriedFunction
+from maryChain.maryChainAST import FunctionCall, While, IfThenElse, IfThen, Lazy, Pipe, Import, CurriedFunction, Assignment
 import maryChain.maryChainAST as AST
 
 # Define the list of tokens that the lexer will recognize
@@ -297,6 +297,11 @@ def p_imports(t):
         t[1].append(t[2])
         t[0] = t[1]
 
+def p_expression_assignment(t):
+    'expression : IDENTIFIER EQUALS expression'
+
+    t[0] = Assignment(t[1], t[3])
+
 def p_expression_let_in(t):
     'expression : LET IDENTIFIER EQUALS expression IN expression'
     """
@@ -322,6 +327,11 @@ def p_expression_binop(t):
     '''expression : expression PLUS expression
                   | expression MINUS expression
                   | expression TIMES expression
+                  | expression EQUALITY expression
+                  | expression GREATER expression
+                  | expression LESS expression
+                  | expression GREATEREQUAL expression
+                  | expression LESSEQUAL expression
                   | expression DIVIDE expression'''
     """
     Handles the parsing of binary operations.
