@@ -270,7 +270,8 @@ class LetIn(Expression):
         """
         # Evaluate the value expression and create a new scope where the identifier is bound to the value.
         value = self.value_expression.evaluate(env)
-        new_env = ENVIRONMENT.copy()
+        # new_env = ENVIRONMENT.copy()
+        new_env = env.copy()
         new_env[self.identifier] = value
 
         # Evaluate the body in the new scope.

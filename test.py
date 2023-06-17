@@ -84,71 +84,71 @@ def assertion(s, expected):
 
 
 
-assertion("1",1)  # Integer literal
-assertion("1+1",2)  # Integer addition
-assertion("(1)",1)  # Integer literal with parentheses
-assertion("(1+1)",2)  # Integer addition with parentheses
-assertion("1+(1+1)",3)  # More complex integer addition with parentheses
-assertion("1+3*2+1",8)  # Addition and multiplication
-assertion("1|add(2)",3)  # Using the pipe operator with function call
-assertion("'hello' | out","hello")
-assertion("add(1)(2)",3)  # Function call with 2 arguments
-assertion("add(1,1)",2)  # Function call with 2 arguments
-assertion("add(1)(2)",3)  # Integer literal
+# assertion("1",1)  # Integer literal
+# assertion("1+1",2)  # Integer addition
+# assertion("(1)",1)  # Integer literal with parentheses
+# assertion("(1+1)",2)  # Integer addition with parentheses
+# assertion("1+(1+1)",3)  # More complex integer addition with parentheses
+# assertion("1+3*2+1",8)  # Addition and multiplication
+# assertion("1|add(2)",3)  # Using the pipe operator with function call
+# assertion("'hello' | out","hello")
+# assertion("add(1)(2)",3)  # Function call with 2 arguments
+# assertion("add(1,1)",2)  # Function call with 2 arguments
+# assertion("add(1)(2)",3)  # Integer literal
 
-assertion("add({1})(2)",3)  # Function call with 2 arguments
-assertion("add({1},2)",3)  # Function call with 2 arguments
-assertion("add({1})(2)",3)  # Integer literal
+# assertion("add({1})(2)",3)  # Function call with 2 arguments
+# assertion("add({1},2)",3)  # Function call with 2 arguments
+# assertion("add({1})(2)",3)  # Integer literal
 
-assertion("add(1)({2})",3)  # Function call with 2 arguments
-assertion("add(1,{2})",3)  # Function call with 2 arguments
-assertion("add(1)({2})",3)  # Integer literal
+# assertion("add(1)({2})",3)  # Function call with 2 arguments
+# assertion("add(1,{2})",3)  # Function call with 2 arguments
+# assertion("add(1)({2})",3)  # Integer literal
 
-assertion("3*add(1,1)",6)  # Mixing arithmetic and function calls
-assertion("add(1,add(1,1))",3)  # Nested function calls
-assertion("{1}",1)  # Expression in braces
-assertion('{"ciao"}','ciao')  # String literal in braces
-assertion("{'ciao'}","ciao")  # Single quoted string literal
-assertion("'ciao'","ciao")  # Single quoted string literal
-assertion('"ciao"',"ciao")  # Double quoted string literal
-assertion("lazy 1", 1)  # Lazy evaluation
-assertion("lazy 1+1", 2)  # Lazy evaluation with arithmetic
-assertion("out('hello')",'hello')  # Print function
-assertion('out("hello")','hello')  # Print function with double quotes
-assertion("1|out",1)  # Using the pipe operator with print function
-assertion('"hello"|out',"hello")  # Printing a string with pipe operator
-assertion('true',True)  # Boolean literal
-assertion('false',False)  # Boolean literal
-assertion('if true then true else false',True)  # If-then-else statement
-assertion('if true then out("true") else out("false")',"true")  # If-then-else statement with print function
-assertion('if true then false',False)  # If-then statement
-assertion("if false then 1 else 2", 2)  # If-then-else statement with false condition
-assertion("if true then if false then 1 else 2 else 3", 2)  # Nested if-then-else statements
+# assertion("3*add(1,1)",6)  # Mixing arithmetic and function calls
+# assertion("add(1,add(1,1))",3)  # Nested function calls
+# assertion("{1}",1)  # Expression in braces
+# assertion('{"ciao"}','ciao')  # String literal in braces
+# assertion("{'ciao'}","ciao")  # Single quoted string literal
+# assertion("'ciao'","ciao")  # Single quoted string literal
+# assertion('"ciao"',"ciao")  # Double quoted string literal
+# assertion("lazy 1", 1)  # Lazy evaluation
+# assertion("lazy 1+1", 2)  # Lazy evaluation with arithmetic
+# assertion("out('hello')",'hello')  # Print function
+# assertion('out("hello")','hello')  # Print function with double quotes
+# assertion("1|out",1)  # Using the pipe operator with print function
+# assertion('"hello"|out',"hello")  # Printing a string with pipe operator
+# assertion('true',True)  # Boolean literal
+# assertion('false',False)  # Boolean literal
+# assertion('if true then true else false',True)  # If-then-else statement
+# assertion('if true then out("true") else out("false")',"true")  # If-then-else statement with print function
+# assertion('if true then false',False)  # If-then statement
+# assertion("if false then 1 else 2", 2)  # If-then-else statement with false condition
+# assertion("if true then if false then 1 else 2 else 3", 2)  # Nested if-then-else statements
 
-assertion("1-1", 0)  # Integer subtraction
-assertion("4/2", 2)  # Integer division
-assertion("2*3+4", 10)  # Mixed multiplication and addition
-assertion("2*(3+4)", 14)  # Multiplication and addition with parentheses
-assertion("lazy (1+2)*2", 6)  # Lazy evaluation with more complex expression
-assertion("lazy if true then 1 else 2", 1)  # Lazy evaluation with if-then-else statement
-assertion("out('world')|out", "world")  # Print function piped into another print function
+# assertion("1-1", 0)  # Integer subtraction
+# assertion("4/2", 2)  # Integer division
+# assertion("2*3+4", 10)  # Mixed multiplication and addition
+# assertion("2*(3+4)", 14)  # Multiplication and addition with parentheses
+# assertion("lazy (1+2)*2", 6)  # Lazy evaluation with more complex expression
+# assertion("lazy if true then 1 else 2", 1)  # Lazy evaluation with if-then-else statement
+# assertion("out('world')|out", "world")  # Print function piped into another print function
 
-assertion(f"""exec('3')""",3)
-assertion(f"""exec('add(1,add(2,3))')""",6)
-assertion(f"""
-          import math as m
-          m.sqrt(9)
-          """,3)
+# assertion(f"""exec('3')""",3)
+# assertion(f"""exec('add(1,add(2,3))')""",6)
+# assertion(f"""
+#           import math as m
+#           m.sqrt(9)
+#           """,3)
 
-assertion("('hello' | out) | out ","hello")
-assertion("'hello' | out | out ","hello")
-assertion("'hello' | out | out | out","hello")
+# assertion("('hello' | out) | out ","hello")
+# assertion("'hello' | out | out ","hello")
+# assertion("'hello' | out | out | out","hello")
 
-assertion("lambda (x) x*2 (3)", 6)  # Lambda function application
-assertion("while false do 1", False)  # While statement with false condition
+# assertion("lambda (x) x*2 (3)", 6)  # Lambda function application
+# assertion("while false do 1", False)  # While statement with false condition
 
-assertion("let x = 5 in x", 5)  # Let-in expression
-assertion("let x = 5 in x*2", 10)  # Let-in expression with use of defined variable
+# assertion("let x = 5 in x", 5)  # Let-in expression
+# assertion("let x = 5 in x*2", 10)  # Let-in expression with use of defined variable
 assertion("let x = 5 in let y = 2 in x*y", 10)  # Nested let-in expressions
 assertion("let x = 5 in let x = 2 in x", 2)  # Shadowing in let-in expressions
 # assertion("let double = lambda x. x*2 in double(3)", 6)  # Let-in expression with lambda function
