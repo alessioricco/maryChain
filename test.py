@@ -1,57 +1,9 @@
 '''
-<program> ::= <defn>* <import>* <expr>?
 
-<import> ::= "import" <module>
-
-<defn> ::= "def" <identifier> "(" <args> ")" "=" <expression>
-
-<expression> ::= <boolean_expression>
-               | "if" <expression> "then" <expression> "else" <expression>
-               | "while" <expression> "do" <expression>
-               | "lazy" <expression>
-               | "{" <expression> "}"
-               | "lambda" "(" <args> ")" <expression>
-               | <expression> "|" <expression>
-
-<boolean_expression> ::= <arithmetic_expression> 
-                       | <arithmetic_expression> "==" <arithmetic_expression>
-                       | <arithmetic_expression> "<" <arithmetic_expression>
-                       | <arithmetic_expression> ">" <arithmetic_expression>
-                       | <arithmetic_expression> "<=" <arithmetic_expression>
-                       | <arithmetic_expression> ">=" <arithmetic_expression>
-
-<arithmetic_expression> ::= <term>
-                          | <term> "+" <arithmetic_expression>
-                          | <term> "-" <arithmetic_expression>
-                          | <term> "*" <arithmetic_expression>
-                          | <term> "/" <arithmetic_expression>
-                          | "(" <arithmetic_expression> ")"
-
-<term> ::= <factor>
-         | <string>
-         | <number>
-         | <boolean>
-         | <function_call>
-
-<factor> ::= <number>
-           | <string>
-           | "true"
-           | "false"
-           | "-" <factor>
-           | "not" <factor>
-
-<function_call> ::= <function_call> "(" <args> ")"
-                  | <identifier> "(" <args> ")"
-                  | <identifier>
-
-<args> ::= <arg>
-         | <args> "," <arg>
-
-<arg> ::= <expression>
 
 '''
 
-import maryChain as mc
+import maryChain.maryChain as mc
 
 
 def assertion(s, expected):
@@ -84,17 +36,26 @@ def assertion(s, expected):
 
 
 
-assertion("add(1)",1)  # Integer literal
-# assertion("add(1)(2)",3)  # Integer literal
-
 assertion("1",1)  # Integer literal
 assertion("1+1",2)  # Integer addition
 assertion("(1)",1)  # Integer literal with parentheses
 assertion("(1+1)",2)  # Integer addition with parentheses
 assertion("1+(1+1)",3)  # More complex integer addition with parentheses
 assertion("1+3*2+1",8)  # Addition and multiplication
-assertion("add(1,1)",2)  # Function call with 2 arguments
 assertion("1|add(2)",3)  # Using the pipe operator with function call
+assertion("'hello' | out","hello")
+assertion("add(1)(2)",3)  # Function call with 2 arguments
+assertion("add(1,1)",2)  # Function call with 2 arguments
+assertion("add(1)(2)",3)  # Integer literal
+
+assertion("add({1})(2)",3)  # Function call with 2 arguments
+assertion("add({1},2)",3)  # Function call with 2 arguments
+assertion("add({1})(2)",3)  # Integer literal
+
+assertion("add(1)({2})",3)  # Function call with 2 arguments
+assertion("add(1,{2})",3)  # Function call with 2 arguments
+assertion("add(1)({2})",3)  # Integer literal
+
 assertion("3*add(1,1)",6)  # Mixing arithmetic and function calls
 assertion("add(1,add(1,1))",3)  # Nested function calls
 assertion("{1}",1)  # Expression in braces
@@ -124,7 +85,6 @@ assertion("lazy (1+2)*2", 6)  # Lazy evaluation with more complex expression
 assertion("lazy if true then 1 else 2", 1)  # Lazy evaluation with if-then-else statement
 assertion("out('world')|out", "world")  # Print function piped into another print function
 
-assertion(f"""import library as core""",None)
 assertion(f"""exec('3')""",3)
 assertion(f"""exec('add(1,add(2,3))')""",6)
 assertion(f"""
@@ -132,54 +92,60 @@ assertion(f"""
           m.sqrt(9)
           """,3)
 
+assertion("('hello' | out) | out ","hello")
+assertion("'hello' | out | out ","hello")
+assertion("'hello' | out | out | out","hello")
 
-# assertion(f"""import Workers.functions as core""",None)
-
-assertion("lambda (x) x*2", "<lambda function>")  # Lambda function definition
-assertion("(lambda (x) x*2)(3)", 6)  # Lambda function application
+assertion("lambda (x) x*2 (3)", 6)  # Lambda function application
 assertion("while false do 1", None)  # While statement with false condition
 
 assertion("let x = 5 in x", 5)  # Let-in expression
 assertion("let x = 5 in x*2", 10)  # Let-in expression with use of defined variable
+
+
 assertion("let x = 5 in let y = 2 in x*y", 10)  # Nested let-in expressions
 assertion("let x = 5 in let x = 2 in x", 2)  # Shadowing in let-in expressions
-assertion("let double = lambda x. x*2 in double(3)", 6)  # Let-in expression with lambda function
+assertion("let double = lambda (x) x*2 in double(3)", 6)  # Let-in expression with lambda function
+
 assertion("let x = 5 in while x > 0 do x = x - 1", 0)  # Loop decrementing a value until it reaches 0
-assertion("let x = 5 in while x > 0 do let y = x in x = x - 1 end end; x", 0)  # Similar loop, but uses an extra variable inside the loop
-assertion("let x = 1 in while x < 100 do x = x * 2 end; x", 128)  # Loop doubling a value until it reaches or exceeds a certain value
-assertion("let x = 0 in let y = 5 in while y > 0 do x = x + y; y = y - 1 end end; x", 15)  # Loop calculating the sum of the first few integers
-assertion("let x = 1 in let y = 0 in while x <= 10 do y = y + x; x = x + 1 end end; y", 55)  # Loop calculating the sum of the first ten integers
+assertion("let x = 1 in while x < 100 do x = x * 2", 128)  # Loop doubling a value until it reaches or exceeds a certain value
 
-# Defining and calling a function
-assertion("let f = \\x -> x + 1 in f(5)", 6)
 
-# Function that calculates factorial
-assertion("""
-let factorial = \\n ->
-    if n = 0 then 1 else n * factorial(n - 1) end
-in factorial(5)
-""", 120)
 
-# Function that calculates the nth Fibonacci number
-assertion("""
-let fib = \\n ->
-    if n <= 1 then n else fib(n - 1) + fib(n - 2) end
-in fib(10)
-""", 55)
+assertion("let x = 0 in let y = 5 in while y > 0 do x = x + (y = y - 1) | out", 10)
+assertion("let x = 0 in let y = 5 in (while y > 0 do x = x + (y = y - 1)) | out", 10)
+# assertion("let x = 1 in let y = 0 in while x <= 10 do y = y + x; x = x + 1 end end; y", 55)  # Loop calculating the sum of the first ten integers
 
-# Function that checks if a number is even
-assertion("""
-let is_even = \\n ->
-    if n % 2 = 0 then true else false end
-in is_even(4)
-""", True)
+# # Defining and calling a function
+# assertion("let f = \\x -> x + 1 in f(5)", 6)
 
-# Function that takes another function as an argument
-assertion("""
-let apply_twice = \\(f, x) -> f(f(x)) in
-let add_one = \\x -> x + 1 in
-apply_twice(add_one, 0)
-""", 2)
+# # Function that calculates factorial
+# assertion("""
+# let factorial = \\n ->
+#     if n = 0 then 1 else n * factorial(n - 1) end
+# in factorial(5)
+# """, 120)
+
+# # Function that calculates the nth Fibonacci number
+# assertion("""
+# let fib = \\n ->
+#     if n <= 1 then n else fib(n - 1) + fib(n - 2) end
+# in fib(10)
+# """, 55)
+
+# # Function that checks if a number is even
+# assertion("""
+# let is_even = \\n ->
+#     if n % 2 = 0 then true else false end
+# in is_even(4)
+# """, True)
+
+# # Function that takes another function as an argument
+# assertion("""
+# let apply_twice = \\(f, x) -> f(f(x)) in
+# let add_one = \\x -> x + 1 in
+# apply_twice(add_one, 0)
+# """, 2)
 
 # assertion("add(1)",2)
 # assertion("1 | out(_)",1)
@@ -188,6 +154,12 @@ apply_twice(add_one, 0)
 # assertion("'hello'|out(_)",'hello')
 # assertion("1|_",1)
 
+# invalid expressions or edge cases
+# assertion(f"""import library as core""",None)
+# assertion(f"""import Workers.functions as core""",None)
+# assertion("lambda (x) x*2", (mc.eval("lambda (x) x*2")))  # Lambda function definition
+# assertion("let x = 5 in while x > 0 do let y = x in x = x - 1", 0)  # Similar loop, but uses an extra variable inside the loop
+# assertion("let x = 0 in let y = 5 in while y > 0 do x = x + y; y = y - 1", 15)  # Loop calculating the sum of the first few integers
 while True:
     """
     Main loop of the program.

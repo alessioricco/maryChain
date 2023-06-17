@@ -1,0 +1,3442 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    BOOLEAN
+    BOOLEANCAST
+    CATCH
+    DEF
+    DOT
+    DOUBLECAST
+    EMPTY
+    FINALLY
+    FOREACH
+    FUNC
+    HEAD
+    IMPLIES
+    INTEGERCAST
+    LBRACK
+    LEN
+    NAMESPACE_OP
+    NOT
+    NULL
+    OR
+    RBRACK
+    STRINGCAST
+    TAIL
+    TRY
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> imports expression
+Rule 2     program -> expression
+Rule 3     import -> IMPORT IDENTIFIER AS IDENTIFIER
+Rule 4     imports -> import
+Rule 5     imports -> imports import
+Rule 6     expression -> IDENTIFIER EQUALS expression
+Rule 7     expression -> LET IDENTIFIER EQUALS expression IN expression
+Rule 8     expression -> expression PLUS expression
+Rule 9     expression -> expression MINUS expression
+Rule 10    expression -> expression TIMES expression
+Rule 11    expression -> expression EQUALITY expression
+Rule 12    expression -> expression GREATER expression
+Rule 13    expression -> expression LESS expression
+Rule 14    expression -> expression GREATEREQUAL expression
+Rule 15    expression -> expression LESSEQUAL expression
+Rule 16    expression -> expression DIVIDE expression
+Rule 17    expression -> MINUS expression
+Rule 18    expression -> LPAREN expression RPAREN
+Rule 19    term -> factor
+Rule 20    factor -> STRING
+Rule 21    factor -> NUMBER
+Rule 22    factor -> TRUE
+Rule 23    factor -> FALSE
+Rule 24    expression -> WHILE expression DO expression
+Rule 25    expression -> IF expression THEN expression ELSE expression
+Rule 26    expression -> IF expression THEN expression
+Rule 27    expression -> LAZY expression
+Rule 28    term -> LCBRACE term RCBRACE
+Rule 29    lambda -> LAMBDA LPAREN args RPAREN expression
+Rule 30    expression -> expression PIPE expression
+Rule 31    expression -> function_call
+Rule 32    expression -> lambda
+Rule 33    expression -> term
+Rule 34    function_call -> function_call LPAREN args RPAREN
+Rule 35    function_call -> function_call LPAREN RPAREN
+Rule 36    function_call -> lambda LPAREN args RPAREN
+Rule 37    function_call -> IDENTIFIER
+Rule 38    args -> args COMMA arg
+Rule 39    args -> arg
+Rule 40    args -> <empty>
+Rule 41    arg -> expression
+
+Terminals, with rules where they appear
+
+AND                  : 
+AS                   : 3
+BOOLEAN              : 
+BOOLEANCAST          : 
+CATCH                : 
+COMMA                : 38
+DEF                  : 
+DIVIDE               : 16
+DO                   : 24
+DOT                  : 
+DOUBLECAST           : 
+ELSE                 : 25
+EMPTY                : 
+EQUALITY             : 11
+EQUALS               : 6 7
+FALSE                : 23
+FINALLY              : 
+FOREACH              : 
+FUNC                 : 
+GREATER              : 12
+GREATEREQUAL         : 14
+HEAD                 : 
+IDENTIFIER           : 3 3 6 7 37
+IF                   : 25 26
+IMPLIES              : 
+IMPORT               : 3
+IN                   : 7
+INTEGERCAST          : 
+LAMBDA               : 29
+LAZY                 : 27
+LBRACK               : 
+LCBRACE              : 28
+LEN                  : 
+LESS                 : 13
+LESSEQUAL            : 15
+LET                  : 7
+LPAREN               : 18 29 34 35 36
+MINUS                : 9 17
+NAMESPACE_OP         : 
+NOT                  : 
+NULL                 : 
+NUMBER               : 21
+OR                   : 
+PIPE                 : 30
+PLUS                 : 8
+RBRACK               : 
+RCBRACE              : 28
+RPAREN               : 18 29 34 35 36
+STRING               : 20
+STRINGCAST           : 
+TAIL                 : 
+THEN                 : 25 26
+TIMES                : 10
+TRUE                 : 22
+TRY                  : 
+WHILE                : 24
+error                : 
+
+Nonterminals, with rules where they appear
+
+arg                  : 38 39
+args                 : 29 34 36 38
+expression           : 1 2 6 7 7 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17 18 24 24 25 25 25 26 26 27 29 30 30 41
+factor               : 19
+function_call        : 31 34 35
+import               : 4 5
+imports              : 1 5
+lambda               : 32 36
+program              : 0
+term                 : 28 33
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . imports expression
+    (2) program -> . expression
+    (4) imports -> . import
+    (5) imports -> . imports import
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (3) import -> . IMPORT IDENTIFIER AS IDENTIFIER
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    IMPORT          shift and go to state 15
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    program                        shift and go to state 1
+    imports                        shift and go to state 2
+    expression                     shift and go to state 3
+    import                         shift and go to state 4
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> imports . expression
+    (5) imports -> imports . import
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (3) import -> . IMPORT IDENTIFIER AS IDENTIFIER
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    IMPORT          shift and go to state 15
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 23
+    import                         shift and go to state 24
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 3
+
+    (2) program -> expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    $end            reduce using rule 2 (program -> expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+
+state 4
+
+    (4) imports -> import .
+
+    IDENTIFIER      reduce using rule 4 (imports -> import .)
+    LET             reduce using rule 4 (imports -> import .)
+    MINUS           reduce using rule 4 (imports -> import .)
+    LPAREN          reduce using rule 4 (imports -> import .)
+    WHILE           reduce using rule 4 (imports -> import .)
+    IF              reduce using rule 4 (imports -> import .)
+    LAZY            reduce using rule 4 (imports -> import .)
+    IMPORT          reduce using rule 4 (imports -> import .)
+    LAMBDA          reduce using rule 4 (imports -> import .)
+    LCBRACE         reduce using rule 4 (imports -> import .)
+    STRING          reduce using rule 4 (imports -> import .)
+    NUMBER          reduce using rule 4 (imports -> import .)
+    TRUE            reduce using rule 4 (imports -> import .)
+    FALSE           reduce using rule 4 (imports -> import .)
+
+
+state 5
+
+    (6) expression -> IDENTIFIER . EQUALS expression
+    (37) function_call -> IDENTIFIER .
+
+    EQUALS          shift and go to state 35
+    LPAREN          reduce using rule 37 (function_call -> IDENTIFIER .)
+    PLUS            reduce using rule 37 (function_call -> IDENTIFIER .)
+    MINUS           reduce using rule 37 (function_call -> IDENTIFIER .)
+    TIMES           reduce using rule 37 (function_call -> IDENTIFIER .)
+    EQUALITY        reduce using rule 37 (function_call -> IDENTIFIER .)
+    GREATER         reduce using rule 37 (function_call -> IDENTIFIER .)
+    LESS            reduce using rule 37 (function_call -> IDENTIFIER .)
+    GREATEREQUAL    reduce using rule 37 (function_call -> IDENTIFIER .)
+    LESSEQUAL       reduce using rule 37 (function_call -> IDENTIFIER .)
+    DIVIDE          reduce using rule 37 (function_call -> IDENTIFIER .)
+    PIPE            reduce using rule 37 (function_call -> IDENTIFIER .)
+    $end            reduce using rule 37 (function_call -> IDENTIFIER .)
+    RPAREN          reduce using rule 37 (function_call -> IDENTIFIER .)
+    DO              reduce using rule 37 (function_call -> IDENTIFIER .)
+    THEN            reduce using rule 37 (function_call -> IDENTIFIER .)
+    COMMA           reduce using rule 37 (function_call -> IDENTIFIER .)
+    IN              reduce using rule 37 (function_call -> IDENTIFIER .)
+    ELSE            reduce using rule 37 (function_call -> IDENTIFIER .)
+
+
+state 6
+
+    (7) expression -> LET . IDENTIFIER EQUALS expression IN expression
+
+    IDENTIFIER      shift and go to state 36
+
+
+state 7
+
+    (17) expression -> MINUS . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 37
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 8
+
+    (18) expression -> LPAREN . expression RPAREN
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 38
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 9
+
+    (24) expression -> WHILE . expression DO expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 39
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 10
+
+    (25) expression -> IF . expression THEN expression ELSE expression
+    (26) expression -> IF . expression THEN expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 40
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 11
+
+    (27) expression -> LAZY . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 41
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 12
+
+    (31) expression -> function_call .
+    (34) function_call -> function_call . LPAREN args RPAREN
+    (35) function_call -> function_call . LPAREN RPAREN
+
+  ! shift/reduce conflict for LPAREN resolved as shift
+    PLUS            reduce using rule 31 (expression -> function_call .)
+    MINUS           reduce using rule 31 (expression -> function_call .)
+    TIMES           reduce using rule 31 (expression -> function_call .)
+    EQUALITY        reduce using rule 31 (expression -> function_call .)
+    GREATER         reduce using rule 31 (expression -> function_call .)
+    LESS            reduce using rule 31 (expression -> function_call .)
+    GREATEREQUAL    reduce using rule 31 (expression -> function_call .)
+    LESSEQUAL       reduce using rule 31 (expression -> function_call .)
+    DIVIDE          reduce using rule 31 (expression -> function_call .)
+    PIPE            reduce using rule 31 (expression -> function_call .)
+    $end            reduce using rule 31 (expression -> function_call .)
+    RPAREN          reduce using rule 31 (expression -> function_call .)
+    DO              reduce using rule 31 (expression -> function_call .)
+    THEN            reduce using rule 31 (expression -> function_call .)
+    COMMA           reduce using rule 31 (expression -> function_call .)
+    IN              reduce using rule 31 (expression -> function_call .)
+    ELSE            reduce using rule 31 (expression -> function_call .)
+    LPAREN          shift and go to state 42
+
+  ! LPAREN          [ reduce using rule 31 (expression -> function_call .) ]
+
+
+state 13
+
+    (32) expression -> lambda .
+    (36) function_call -> lambda . LPAREN args RPAREN
+
+  ! shift/reduce conflict for LPAREN resolved as shift
+    PLUS            reduce using rule 32 (expression -> lambda .)
+    MINUS           reduce using rule 32 (expression -> lambda .)
+    TIMES           reduce using rule 32 (expression -> lambda .)
+    EQUALITY        reduce using rule 32 (expression -> lambda .)
+    GREATER         reduce using rule 32 (expression -> lambda .)
+    LESS            reduce using rule 32 (expression -> lambda .)
+    GREATEREQUAL    reduce using rule 32 (expression -> lambda .)
+    LESSEQUAL       reduce using rule 32 (expression -> lambda .)
+    DIVIDE          reduce using rule 32 (expression -> lambda .)
+    PIPE            reduce using rule 32 (expression -> lambda .)
+    $end            reduce using rule 32 (expression -> lambda .)
+    RPAREN          reduce using rule 32 (expression -> lambda .)
+    DO              reduce using rule 32 (expression -> lambda .)
+    THEN            reduce using rule 32 (expression -> lambda .)
+    COMMA           reduce using rule 32 (expression -> lambda .)
+    IN              reduce using rule 32 (expression -> lambda .)
+    ELSE            reduce using rule 32 (expression -> lambda .)
+    LPAREN          shift and go to state 43
+
+  ! LPAREN          [ reduce using rule 32 (expression -> lambda .) ]
+
+
+state 14
+
+    (33) expression -> term .
+
+    PLUS            reduce using rule 33 (expression -> term .)
+    MINUS           reduce using rule 33 (expression -> term .)
+    TIMES           reduce using rule 33 (expression -> term .)
+    EQUALITY        reduce using rule 33 (expression -> term .)
+    GREATER         reduce using rule 33 (expression -> term .)
+    LESS            reduce using rule 33 (expression -> term .)
+    GREATEREQUAL    reduce using rule 33 (expression -> term .)
+    LESSEQUAL       reduce using rule 33 (expression -> term .)
+    DIVIDE          reduce using rule 33 (expression -> term .)
+    PIPE            reduce using rule 33 (expression -> term .)
+    $end            reduce using rule 33 (expression -> term .)
+    RPAREN          reduce using rule 33 (expression -> term .)
+    DO              reduce using rule 33 (expression -> term .)
+    THEN            reduce using rule 33 (expression -> term .)
+    COMMA           reduce using rule 33 (expression -> term .)
+    IN              reduce using rule 33 (expression -> term .)
+    ELSE            reduce using rule 33 (expression -> term .)
+    LPAREN          reduce using rule 33 (expression -> term .)
+
+
+state 15
+
+    (3) import -> IMPORT . IDENTIFIER AS IDENTIFIER
+
+    IDENTIFIER      shift and go to state 44
+
+
+state 16
+
+    (29) lambda -> LAMBDA . LPAREN args RPAREN expression
+
+    LPAREN          shift and go to state 45
+
+
+state 17
+
+    (19) term -> factor .
+
+    PLUS            reduce using rule 19 (term -> factor .)
+    MINUS           reduce using rule 19 (term -> factor .)
+    TIMES           reduce using rule 19 (term -> factor .)
+    EQUALITY        reduce using rule 19 (term -> factor .)
+    GREATER         reduce using rule 19 (term -> factor .)
+    LESS            reduce using rule 19 (term -> factor .)
+    GREATEREQUAL    reduce using rule 19 (term -> factor .)
+    LESSEQUAL       reduce using rule 19 (term -> factor .)
+    DIVIDE          reduce using rule 19 (term -> factor .)
+    PIPE            reduce using rule 19 (term -> factor .)
+    $end            reduce using rule 19 (term -> factor .)
+    RPAREN          reduce using rule 19 (term -> factor .)
+    DO              reduce using rule 19 (term -> factor .)
+    THEN            reduce using rule 19 (term -> factor .)
+    COMMA           reduce using rule 19 (term -> factor .)
+    IN              reduce using rule 19 (term -> factor .)
+    ELSE            reduce using rule 19 (term -> factor .)
+    LPAREN          reduce using rule 19 (term -> factor .)
+    RCBRACE         reduce using rule 19 (term -> factor .)
+
+
+state 18
+
+    (28) term -> LCBRACE . term RCBRACE
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    term                           shift and go to state 46
+    factor                         shift and go to state 17
+
+state 19
+
+    (20) factor -> STRING .
+
+    PLUS            reduce using rule 20 (factor -> STRING .)
+    MINUS           reduce using rule 20 (factor -> STRING .)
+    TIMES           reduce using rule 20 (factor -> STRING .)
+    EQUALITY        reduce using rule 20 (factor -> STRING .)
+    GREATER         reduce using rule 20 (factor -> STRING .)
+    LESS            reduce using rule 20 (factor -> STRING .)
+    GREATEREQUAL    reduce using rule 20 (factor -> STRING .)
+    LESSEQUAL       reduce using rule 20 (factor -> STRING .)
+    DIVIDE          reduce using rule 20 (factor -> STRING .)
+    PIPE            reduce using rule 20 (factor -> STRING .)
+    $end            reduce using rule 20 (factor -> STRING .)
+    RPAREN          reduce using rule 20 (factor -> STRING .)
+    DO              reduce using rule 20 (factor -> STRING .)
+    THEN            reduce using rule 20 (factor -> STRING .)
+    COMMA           reduce using rule 20 (factor -> STRING .)
+    IN              reduce using rule 20 (factor -> STRING .)
+    ELSE            reduce using rule 20 (factor -> STRING .)
+    LPAREN          reduce using rule 20 (factor -> STRING .)
+    RCBRACE         reduce using rule 20 (factor -> STRING .)
+
+
+state 20
+
+    (21) factor -> NUMBER .
+
+    PLUS            reduce using rule 21 (factor -> NUMBER .)
+    MINUS           reduce using rule 21 (factor -> NUMBER .)
+    TIMES           reduce using rule 21 (factor -> NUMBER .)
+    EQUALITY        reduce using rule 21 (factor -> NUMBER .)
+    GREATER         reduce using rule 21 (factor -> NUMBER .)
+    LESS            reduce using rule 21 (factor -> NUMBER .)
+    GREATEREQUAL    reduce using rule 21 (factor -> NUMBER .)
+    LESSEQUAL       reduce using rule 21 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 21 (factor -> NUMBER .)
+    PIPE            reduce using rule 21 (factor -> NUMBER .)
+    $end            reduce using rule 21 (factor -> NUMBER .)
+    RPAREN          reduce using rule 21 (factor -> NUMBER .)
+    DO              reduce using rule 21 (factor -> NUMBER .)
+    THEN            reduce using rule 21 (factor -> NUMBER .)
+    COMMA           reduce using rule 21 (factor -> NUMBER .)
+    IN              reduce using rule 21 (factor -> NUMBER .)
+    ELSE            reduce using rule 21 (factor -> NUMBER .)
+    LPAREN          reduce using rule 21 (factor -> NUMBER .)
+    RCBRACE         reduce using rule 21 (factor -> NUMBER .)
+
+
+state 21
+
+    (22) factor -> TRUE .
+
+    PLUS            reduce using rule 22 (factor -> TRUE .)
+    MINUS           reduce using rule 22 (factor -> TRUE .)
+    TIMES           reduce using rule 22 (factor -> TRUE .)
+    EQUALITY        reduce using rule 22 (factor -> TRUE .)
+    GREATER         reduce using rule 22 (factor -> TRUE .)
+    LESS            reduce using rule 22 (factor -> TRUE .)
+    GREATEREQUAL    reduce using rule 22 (factor -> TRUE .)
+    LESSEQUAL       reduce using rule 22 (factor -> TRUE .)
+    DIVIDE          reduce using rule 22 (factor -> TRUE .)
+    PIPE            reduce using rule 22 (factor -> TRUE .)
+    $end            reduce using rule 22 (factor -> TRUE .)
+    RPAREN          reduce using rule 22 (factor -> TRUE .)
+    DO              reduce using rule 22 (factor -> TRUE .)
+    THEN            reduce using rule 22 (factor -> TRUE .)
+    COMMA           reduce using rule 22 (factor -> TRUE .)
+    IN              reduce using rule 22 (factor -> TRUE .)
+    ELSE            reduce using rule 22 (factor -> TRUE .)
+    LPAREN          reduce using rule 22 (factor -> TRUE .)
+    RCBRACE         reduce using rule 22 (factor -> TRUE .)
+
+
+state 22
+
+    (23) factor -> FALSE .
+
+    PLUS            reduce using rule 23 (factor -> FALSE .)
+    MINUS           reduce using rule 23 (factor -> FALSE .)
+    TIMES           reduce using rule 23 (factor -> FALSE .)
+    EQUALITY        reduce using rule 23 (factor -> FALSE .)
+    GREATER         reduce using rule 23 (factor -> FALSE .)
+    LESS            reduce using rule 23 (factor -> FALSE .)
+    GREATEREQUAL    reduce using rule 23 (factor -> FALSE .)
+    LESSEQUAL       reduce using rule 23 (factor -> FALSE .)
+    DIVIDE          reduce using rule 23 (factor -> FALSE .)
+    PIPE            reduce using rule 23 (factor -> FALSE .)
+    $end            reduce using rule 23 (factor -> FALSE .)
+    RPAREN          reduce using rule 23 (factor -> FALSE .)
+    DO              reduce using rule 23 (factor -> FALSE .)
+    THEN            reduce using rule 23 (factor -> FALSE .)
+    COMMA           reduce using rule 23 (factor -> FALSE .)
+    IN              reduce using rule 23 (factor -> FALSE .)
+    ELSE            reduce using rule 23 (factor -> FALSE .)
+    LPAREN          reduce using rule 23 (factor -> FALSE .)
+    RCBRACE         reduce using rule 23 (factor -> FALSE .)
+
+
+state 23
+
+    (1) program -> imports expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    $end            reduce using rule 1 (program -> imports expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+
+state 24
+
+    (5) imports -> imports import .
+
+    IDENTIFIER      reduce using rule 5 (imports -> imports import .)
+    LET             reduce using rule 5 (imports -> imports import .)
+    MINUS           reduce using rule 5 (imports -> imports import .)
+    LPAREN          reduce using rule 5 (imports -> imports import .)
+    WHILE           reduce using rule 5 (imports -> imports import .)
+    IF              reduce using rule 5 (imports -> imports import .)
+    LAZY            reduce using rule 5 (imports -> imports import .)
+    IMPORT          reduce using rule 5 (imports -> imports import .)
+    LAMBDA          reduce using rule 5 (imports -> imports import .)
+    LCBRACE         reduce using rule 5 (imports -> imports import .)
+    STRING          reduce using rule 5 (imports -> imports import .)
+    NUMBER          reduce using rule 5 (imports -> imports import .)
+    TRUE            reduce using rule 5 (imports -> imports import .)
+    FALSE           reduce using rule 5 (imports -> imports import .)
+
+
+state 25
+
+    (8) expression -> expression PLUS . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 47
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 26
+
+    (9) expression -> expression MINUS . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 48
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 27
+
+    (10) expression -> expression TIMES . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 49
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 28
+
+    (11) expression -> expression EQUALITY . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 50
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 29
+
+    (12) expression -> expression GREATER . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 51
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 30
+
+    (13) expression -> expression LESS . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 52
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 31
+
+    (14) expression -> expression GREATEREQUAL . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 53
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 32
+
+    (15) expression -> expression LESSEQUAL . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 54
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 33
+
+    (16) expression -> expression DIVIDE . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 55
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 34
+
+    (30) expression -> expression PIPE . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 56
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 35
+
+    (6) expression -> IDENTIFIER EQUALS . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 57
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 36
+
+    (7) expression -> LET IDENTIFIER . EQUALS expression IN expression
+
+    EQUALS          shift and go to state 58
+
+
+state 37
+
+    (17) expression -> MINUS expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    EQUALITY        reduce using rule 17 (expression -> MINUS expression .)
+    GREATER         reduce using rule 17 (expression -> MINUS expression .)
+    LESS            reduce using rule 17 (expression -> MINUS expression .)
+    GREATEREQUAL    reduce using rule 17 (expression -> MINUS expression .)
+    LESSEQUAL       reduce using rule 17 (expression -> MINUS expression .)
+    PIPE            reduce using rule 17 (expression -> MINUS expression .)
+    $end            reduce using rule 17 (expression -> MINUS expression .)
+    RPAREN          reduce using rule 17 (expression -> MINUS expression .)
+    DO              reduce using rule 17 (expression -> MINUS expression .)
+    THEN            reduce using rule 17 (expression -> MINUS expression .)
+    COMMA           reduce using rule 17 (expression -> MINUS expression .)
+    IN              reduce using rule 17 (expression -> MINUS expression .)
+    ELSE            reduce using rule 17 (expression -> MINUS expression .)
+    LPAREN          reduce using rule 17 (expression -> MINUS expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    DIVIDE          shift and go to state 33
+
+  ! PLUS            [ reduce using rule 17 (expression -> MINUS expression .) ]
+  ! MINUS           [ reduce using rule 17 (expression -> MINUS expression .) ]
+  ! TIMES           [ reduce using rule 17 (expression -> MINUS expression .) ]
+  ! DIVIDE          [ reduce using rule 17 (expression -> MINUS expression .) ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 38
+
+    (18) expression -> LPAREN expression . RPAREN
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    RPAREN          shift and go to state 59
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+
+state 39
+
+    (24) expression -> WHILE expression . DO expression
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    DO              shift and go to state 60
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+
+state 40
+
+    (25) expression -> IF expression . THEN expression ELSE expression
+    (26) expression -> IF expression . THEN expression
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    THEN            shift and go to state 61
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+
+state 41
+
+    (27) expression -> LAZY expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESS resolved as shift
+  ! shift/reduce conflict for GREATEREQUAL resolved as shift
+  ! shift/reduce conflict for LESSEQUAL resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for PIPE resolved as shift
+    $end            reduce using rule 27 (expression -> LAZY expression .)
+    RPAREN          reduce using rule 27 (expression -> LAZY expression .)
+    DO              reduce using rule 27 (expression -> LAZY expression .)
+    THEN            reduce using rule 27 (expression -> LAZY expression .)
+    COMMA           reduce using rule 27 (expression -> LAZY expression .)
+    IN              reduce using rule 27 (expression -> LAZY expression .)
+    ELSE            reduce using rule 27 (expression -> LAZY expression .)
+    LPAREN          reduce using rule 27 (expression -> LAZY expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+  ! PLUS            [ reduce using rule 27 (expression -> LAZY expression .) ]
+  ! MINUS           [ reduce using rule 27 (expression -> LAZY expression .) ]
+  ! TIMES           [ reduce using rule 27 (expression -> LAZY expression .) ]
+  ! EQUALITY        [ reduce using rule 27 (expression -> LAZY expression .) ]
+  ! GREATER         [ reduce using rule 27 (expression -> LAZY expression .) ]
+  ! LESS            [ reduce using rule 27 (expression -> LAZY expression .) ]
+  ! GREATEREQUAL    [ reduce using rule 27 (expression -> LAZY expression .) ]
+  ! LESSEQUAL       [ reduce using rule 27 (expression -> LAZY expression .) ]
+  ! DIVIDE          [ reduce using rule 27 (expression -> LAZY expression .) ]
+  ! PIPE            [ reduce using rule 27 (expression -> LAZY expression .) ]
+
+
+state 42
+
+    (34) function_call -> function_call LPAREN . args RPAREN
+    (35) function_call -> function_call LPAREN . RPAREN
+    (38) args -> . args COMMA arg
+    (39) args -> . arg
+    (40) args -> .
+    (41) arg -> . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+  ! shift/reduce conflict for RPAREN resolved as shift
+    RPAREN          shift and go to state 63
+    COMMA           reduce using rule 40 (args -> .)
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+  ! RPAREN          [ reduce using rule 40 (args -> .) ]
+
+    function_call                  shift and go to state 12
+    args                           shift and go to state 62
+    arg                            shift and go to state 64
+    expression                     shift and go to state 65
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 43
+
+    (36) function_call -> lambda LPAREN . args RPAREN
+    (38) args -> . args COMMA arg
+    (39) args -> . arg
+    (40) args -> .
+    (41) arg -> . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    RPAREN          reduce using rule 40 (args -> .)
+    COMMA           reduce using rule 40 (args -> .)
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    lambda                         shift and go to state 13
+    args                           shift and go to state 66
+    arg                            shift and go to state 64
+    expression                     shift and go to state 65
+    function_call                  shift and go to state 12
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 44
+
+    (3) import -> IMPORT IDENTIFIER . AS IDENTIFIER
+
+    AS              shift and go to state 67
+
+
+state 45
+
+    (29) lambda -> LAMBDA LPAREN . args RPAREN expression
+    (38) args -> . args COMMA arg
+    (39) args -> . arg
+    (40) args -> .
+    (41) arg -> . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    RPAREN          reduce using rule 40 (args -> .)
+    COMMA           reduce using rule 40 (args -> .)
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    args                           shift and go to state 68
+    expression                     shift and go to state 65
+    arg                            shift and go to state 64
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 46
+
+    (28) term -> LCBRACE term . RCBRACE
+
+    RCBRACE         shift and go to state 69
+
+
+state 47
+
+    (8) expression -> expression PLUS expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    PLUS            reduce using rule 8 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 8 (expression -> expression PLUS expression .)
+    EQUALITY        reduce using rule 8 (expression -> expression PLUS expression .)
+    GREATER         reduce using rule 8 (expression -> expression PLUS expression .)
+    LESS            reduce using rule 8 (expression -> expression PLUS expression .)
+    GREATEREQUAL    reduce using rule 8 (expression -> expression PLUS expression .)
+    LESSEQUAL       reduce using rule 8 (expression -> expression PLUS expression .)
+    PIPE            reduce using rule 8 (expression -> expression PLUS expression .)
+    $end            reduce using rule 8 (expression -> expression PLUS expression .)
+    RPAREN          reduce using rule 8 (expression -> expression PLUS expression .)
+    DO              reduce using rule 8 (expression -> expression PLUS expression .)
+    THEN            reduce using rule 8 (expression -> expression PLUS expression .)
+    COMMA           reduce using rule 8 (expression -> expression PLUS expression .)
+    IN              reduce using rule 8 (expression -> expression PLUS expression .)
+    ELSE            reduce using rule 8 (expression -> expression PLUS expression .)
+    LPAREN          reduce using rule 8 (expression -> expression PLUS expression .)
+    TIMES           shift and go to state 27
+    DIVIDE          shift and go to state 33
+
+  ! TIMES           [ reduce using rule 8 (expression -> expression PLUS expression .) ]
+  ! DIVIDE          [ reduce using rule 8 (expression -> expression PLUS expression .) ]
+  ! PLUS            [ shift and go to state 25 ]
+  ! MINUS           [ shift and go to state 26 ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 48
+
+    (9) expression -> expression MINUS expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    PLUS            reduce using rule 9 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 9 (expression -> expression MINUS expression .)
+    EQUALITY        reduce using rule 9 (expression -> expression MINUS expression .)
+    GREATER         reduce using rule 9 (expression -> expression MINUS expression .)
+    LESS            reduce using rule 9 (expression -> expression MINUS expression .)
+    GREATEREQUAL    reduce using rule 9 (expression -> expression MINUS expression .)
+    LESSEQUAL       reduce using rule 9 (expression -> expression MINUS expression .)
+    PIPE            reduce using rule 9 (expression -> expression MINUS expression .)
+    $end            reduce using rule 9 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 9 (expression -> expression MINUS expression .)
+    DO              reduce using rule 9 (expression -> expression MINUS expression .)
+    THEN            reduce using rule 9 (expression -> expression MINUS expression .)
+    COMMA           reduce using rule 9 (expression -> expression MINUS expression .)
+    IN              reduce using rule 9 (expression -> expression MINUS expression .)
+    ELSE            reduce using rule 9 (expression -> expression MINUS expression .)
+    LPAREN          reduce using rule 9 (expression -> expression MINUS expression .)
+    TIMES           shift and go to state 27
+    DIVIDE          shift and go to state 33
+
+  ! TIMES           [ reduce using rule 9 (expression -> expression MINUS expression .) ]
+  ! DIVIDE          [ reduce using rule 9 (expression -> expression MINUS expression .) ]
+  ! PLUS            [ shift and go to state 25 ]
+  ! MINUS           [ shift and go to state 26 ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 49
+
+    (10) expression -> expression TIMES expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    PLUS            reduce using rule 10 (expression -> expression TIMES expression .)
+    MINUS           reduce using rule 10 (expression -> expression TIMES expression .)
+    TIMES           reduce using rule 10 (expression -> expression TIMES expression .)
+    EQUALITY        reduce using rule 10 (expression -> expression TIMES expression .)
+    GREATER         reduce using rule 10 (expression -> expression TIMES expression .)
+    LESS            reduce using rule 10 (expression -> expression TIMES expression .)
+    GREATEREQUAL    reduce using rule 10 (expression -> expression TIMES expression .)
+    LESSEQUAL       reduce using rule 10 (expression -> expression TIMES expression .)
+    DIVIDE          reduce using rule 10 (expression -> expression TIMES expression .)
+    PIPE            reduce using rule 10 (expression -> expression TIMES expression .)
+    $end            reduce using rule 10 (expression -> expression TIMES expression .)
+    RPAREN          reduce using rule 10 (expression -> expression TIMES expression .)
+    DO              reduce using rule 10 (expression -> expression TIMES expression .)
+    THEN            reduce using rule 10 (expression -> expression TIMES expression .)
+    COMMA           reduce using rule 10 (expression -> expression TIMES expression .)
+    IN              reduce using rule 10 (expression -> expression TIMES expression .)
+    ELSE            reduce using rule 10 (expression -> expression TIMES expression .)
+    LPAREN          reduce using rule 10 (expression -> expression TIMES expression .)
+
+  ! PLUS            [ shift and go to state 25 ]
+  ! MINUS           [ shift and go to state 26 ]
+  ! TIMES           [ shift and go to state 27 ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! DIVIDE          [ shift and go to state 33 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 50
+
+    (11) expression -> expression EQUALITY expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    EQUALITY        reduce using rule 11 (expression -> expression EQUALITY expression .)
+    GREATER         reduce using rule 11 (expression -> expression EQUALITY expression .)
+    LESS            reduce using rule 11 (expression -> expression EQUALITY expression .)
+    GREATEREQUAL    reduce using rule 11 (expression -> expression EQUALITY expression .)
+    LESSEQUAL       reduce using rule 11 (expression -> expression EQUALITY expression .)
+    PIPE            reduce using rule 11 (expression -> expression EQUALITY expression .)
+    $end            reduce using rule 11 (expression -> expression EQUALITY expression .)
+    RPAREN          reduce using rule 11 (expression -> expression EQUALITY expression .)
+    DO              reduce using rule 11 (expression -> expression EQUALITY expression .)
+    THEN            reduce using rule 11 (expression -> expression EQUALITY expression .)
+    COMMA           reduce using rule 11 (expression -> expression EQUALITY expression .)
+    IN              reduce using rule 11 (expression -> expression EQUALITY expression .)
+    ELSE            reduce using rule 11 (expression -> expression EQUALITY expression .)
+    LPAREN          reduce using rule 11 (expression -> expression EQUALITY expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    DIVIDE          shift and go to state 33
+
+  ! PLUS            [ reduce using rule 11 (expression -> expression EQUALITY expression .) ]
+  ! MINUS           [ reduce using rule 11 (expression -> expression EQUALITY expression .) ]
+  ! TIMES           [ reduce using rule 11 (expression -> expression EQUALITY expression .) ]
+  ! DIVIDE          [ reduce using rule 11 (expression -> expression EQUALITY expression .) ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 51
+
+    (12) expression -> expression GREATER expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    EQUALITY        reduce using rule 12 (expression -> expression GREATER expression .)
+    GREATER         reduce using rule 12 (expression -> expression GREATER expression .)
+    LESS            reduce using rule 12 (expression -> expression GREATER expression .)
+    GREATEREQUAL    reduce using rule 12 (expression -> expression GREATER expression .)
+    LESSEQUAL       reduce using rule 12 (expression -> expression GREATER expression .)
+    PIPE            reduce using rule 12 (expression -> expression GREATER expression .)
+    $end            reduce using rule 12 (expression -> expression GREATER expression .)
+    RPAREN          reduce using rule 12 (expression -> expression GREATER expression .)
+    DO              reduce using rule 12 (expression -> expression GREATER expression .)
+    THEN            reduce using rule 12 (expression -> expression GREATER expression .)
+    COMMA           reduce using rule 12 (expression -> expression GREATER expression .)
+    IN              reduce using rule 12 (expression -> expression GREATER expression .)
+    ELSE            reduce using rule 12 (expression -> expression GREATER expression .)
+    LPAREN          reduce using rule 12 (expression -> expression GREATER expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    DIVIDE          shift and go to state 33
+
+  ! PLUS            [ reduce using rule 12 (expression -> expression GREATER expression .) ]
+  ! MINUS           [ reduce using rule 12 (expression -> expression GREATER expression .) ]
+  ! TIMES           [ reduce using rule 12 (expression -> expression GREATER expression .) ]
+  ! DIVIDE          [ reduce using rule 12 (expression -> expression GREATER expression .) ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 52
+
+    (13) expression -> expression LESS expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    EQUALITY        reduce using rule 13 (expression -> expression LESS expression .)
+    GREATER         reduce using rule 13 (expression -> expression LESS expression .)
+    LESS            reduce using rule 13 (expression -> expression LESS expression .)
+    GREATEREQUAL    reduce using rule 13 (expression -> expression LESS expression .)
+    LESSEQUAL       reduce using rule 13 (expression -> expression LESS expression .)
+    PIPE            reduce using rule 13 (expression -> expression LESS expression .)
+    $end            reduce using rule 13 (expression -> expression LESS expression .)
+    RPAREN          reduce using rule 13 (expression -> expression LESS expression .)
+    DO              reduce using rule 13 (expression -> expression LESS expression .)
+    THEN            reduce using rule 13 (expression -> expression LESS expression .)
+    COMMA           reduce using rule 13 (expression -> expression LESS expression .)
+    IN              reduce using rule 13 (expression -> expression LESS expression .)
+    ELSE            reduce using rule 13 (expression -> expression LESS expression .)
+    LPAREN          reduce using rule 13 (expression -> expression LESS expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    DIVIDE          shift and go to state 33
+
+  ! PLUS            [ reduce using rule 13 (expression -> expression LESS expression .) ]
+  ! MINUS           [ reduce using rule 13 (expression -> expression LESS expression .) ]
+  ! TIMES           [ reduce using rule 13 (expression -> expression LESS expression .) ]
+  ! DIVIDE          [ reduce using rule 13 (expression -> expression LESS expression .) ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 53
+
+    (14) expression -> expression GREATEREQUAL expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    EQUALITY        reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    GREATER         reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    LESS            reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    GREATEREQUAL    reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    LESSEQUAL       reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    PIPE            reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    $end            reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    RPAREN          reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    DO              reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    THEN            reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    COMMA           reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    IN              reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    ELSE            reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    LPAREN          reduce using rule 14 (expression -> expression GREATEREQUAL expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    DIVIDE          shift and go to state 33
+
+  ! PLUS            [ reduce using rule 14 (expression -> expression GREATEREQUAL expression .) ]
+  ! MINUS           [ reduce using rule 14 (expression -> expression GREATEREQUAL expression .) ]
+  ! TIMES           [ reduce using rule 14 (expression -> expression GREATEREQUAL expression .) ]
+  ! DIVIDE          [ reduce using rule 14 (expression -> expression GREATEREQUAL expression .) ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 54
+
+    (15) expression -> expression LESSEQUAL expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    EQUALITY        reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    GREATER         reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    LESS            reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    GREATEREQUAL    reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    LESSEQUAL       reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    PIPE            reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    $end            reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    RPAREN          reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    DO              reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    THEN            reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    COMMA           reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    IN              reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    ELSE            reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    LPAREN          reduce using rule 15 (expression -> expression LESSEQUAL expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    DIVIDE          shift and go to state 33
+
+  ! PLUS            [ reduce using rule 15 (expression -> expression LESSEQUAL expression .) ]
+  ! MINUS           [ reduce using rule 15 (expression -> expression LESSEQUAL expression .) ]
+  ! TIMES           [ reduce using rule 15 (expression -> expression LESSEQUAL expression .) ]
+  ! DIVIDE          [ reduce using rule 15 (expression -> expression LESSEQUAL expression .) ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 55
+
+    (16) expression -> expression DIVIDE expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    PLUS            reduce using rule 16 (expression -> expression DIVIDE expression .)
+    MINUS           reduce using rule 16 (expression -> expression DIVIDE expression .)
+    TIMES           reduce using rule 16 (expression -> expression DIVIDE expression .)
+    EQUALITY        reduce using rule 16 (expression -> expression DIVIDE expression .)
+    GREATER         reduce using rule 16 (expression -> expression DIVIDE expression .)
+    LESS            reduce using rule 16 (expression -> expression DIVIDE expression .)
+    GREATEREQUAL    reduce using rule 16 (expression -> expression DIVIDE expression .)
+    LESSEQUAL       reduce using rule 16 (expression -> expression DIVIDE expression .)
+    DIVIDE          reduce using rule 16 (expression -> expression DIVIDE expression .)
+    PIPE            reduce using rule 16 (expression -> expression DIVIDE expression .)
+    $end            reduce using rule 16 (expression -> expression DIVIDE expression .)
+    RPAREN          reduce using rule 16 (expression -> expression DIVIDE expression .)
+    DO              reduce using rule 16 (expression -> expression DIVIDE expression .)
+    THEN            reduce using rule 16 (expression -> expression DIVIDE expression .)
+    COMMA           reduce using rule 16 (expression -> expression DIVIDE expression .)
+    IN              reduce using rule 16 (expression -> expression DIVIDE expression .)
+    ELSE            reduce using rule 16 (expression -> expression DIVIDE expression .)
+    LPAREN          reduce using rule 16 (expression -> expression DIVIDE expression .)
+
+  ! PLUS            [ shift and go to state 25 ]
+  ! MINUS           [ shift and go to state 26 ]
+  ! TIMES           [ shift and go to state 27 ]
+  ! EQUALITY        [ shift and go to state 28 ]
+  ! GREATER         [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATEREQUAL    [ shift and go to state 31 ]
+  ! LESSEQUAL       [ shift and go to state 32 ]
+  ! DIVIDE          [ shift and go to state 33 ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 56
+
+    (30) expression -> expression PIPE expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    PIPE            reduce using rule 30 (expression -> expression PIPE expression .)
+    $end            reduce using rule 30 (expression -> expression PIPE expression .)
+    RPAREN          reduce using rule 30 (expression -> expression PIPE expression .)
+    DO              reduce using rule 30 (expression -> expression PIPE expression .)
+    THEN            reduce using rule 30 (expression -> expression PIPE expression .)
+    COMMA           reduce using rule 30 (expression -> expression PIPE expression .)
+    IN              reduce using rule 30 (expression -> expression PIPE expression .)
+    ELSE            reduce using rule 30 (expression -> expression PIPE expression .)
+    LPAREN          reduce using rule 30 (expression -> expression PIPE expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+
+  ! PLUS            [ reduce using rule 30 (expression -> expression PIPE expression .) ]
+  ! MINUS           [ reduce using rule 30 (expression -> expression PIPE expression .) ]
+  ! TIMES           [ reduce using rule 30 (expression -> expression PIPE expression .) ]
+  ! EQUALITY        [ reduce using rule 30 (expression -> expression PIPE expression .) ]
+  ! GREATER         [ reduce using rule 30 (expression -> expression PIPE expression .) ]
+  ! LESS            [ reduce using rule 30 (expression -> expression PIPE expression .) ]
+  ! GREATEREQUAL    [ reduce using rule 30 (expression -> expression PIPE expression .) ]
+  ! LESSEQUAL       [ reduce using rule 30 (expression -> expression PIPE expression .) ]
+  ! DIVIDE          [ reduce using rule 30 (expression -> expression PIPE expression .) ]
+  ! PIPE            [ shift and go to state 34 ]
+
+
+state 57
+
+    (6) expression -> IDENTIFIER EQUALS expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESS resolved as shift
+  ! shift/reduce conflict for GREATEREQUAL resolved as shift
+  ! shift/reduce conflict for LESSEQUAL resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for PIPE resolved as shift
+    $end            reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .)
+    RPAREN          reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .)
+    DO              reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .)
+    THEN            reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .)
+    COMMA           reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .)
+    IN              reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .)
+    ELSE            reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .)
+    LPAREN          reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+  ! PLUS            [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+  ! MINUS           [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+  ! TIMES           [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+  ! EQUALITY        [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+  ! GREATER         [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+  ! LESS            [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+  ! GREATEREQUAL    [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+  ! LESSEQUAL       [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+  ! DIVIDE          [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+  ! PIPE            [ reduce using rule 6 (expression -> IDENTIFIER EQUALS expression .) ]
+
+
+state 58
+
+    (7) expression -> LET IDENTIFIER EQUALS . expression IN expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 70
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 59
+
+    (18) expression -> LPAREN expression RPAREN .
+
+    PLUS            reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    EQUALITY        reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    GREATER         reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    LESS            reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    GREATEREQUAL    reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    LESSEQUAL       reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    PIPE            reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    $end            reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    DO              reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    THEN            reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    IN              reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    ELSE            reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+    LPAREN          reduce using rule 18 (expression -> LPAREN expression RPAREN .)
+
+
+state 60
+
+    (24) expression -> WHILE expression DO . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 71
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 61
+
+    (25) expression -> IF expression THEN . expression ELSE expression
+    (26) expression -> IF expression THEN . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 72
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 62
+
+    (34) function_call -> function_call LPAREN args . RPAREN
+    (38) args -> args . COMMA arg
+
+    RPAREN          shift and go to state 73
+    COMMA           shift and go to state 74
+
+
+state 63
+
+    (35) function_call -> function_call LPAREN RPAREN .
+
+    LPAREN          reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    PLUS            reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    MINUS           reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    TIMES           reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    EQUALITY        reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    GREATER         reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    LESS            reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    GREATEREQUAL    reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    LESSEQUAL       reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    DIVIDE          reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    PIPE            reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    $end            reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    RPAREN          reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    DO              reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    THEN            reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    COMMA           reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    IN              reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+    ELSE            reduce using rule 35 (function_call -> function_call LPAREN RPAREN .)
+
+
+state 64
+
+    (39) args -> arg .
+
+    RPAREN          reduce using rule 39 (args -> arg .)
+    COMMA           reduce using rule 39 (args -> arg .)
+
+
+state 65
+
+    (41) arg -> expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    RPAREN          reduce using rule 41 (arg -> expression .)
+    COMMA           reduce using rule 41 (arg -> expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+
+state 66
+
+    (36) function_call -> lambda LPAREN args . RPAREN
+    (38) args -> args . COMMA arg
+
+    RPAREN          shift and go to state 75
+    COMMA           shift and go to state 74
+
+
+state 67
+
+    (3) import -> IMPORT IDENTIFIER AS . IDENTIFIER
+
+    IDENTIFIER      shift and go to state 76
+
+
+state 68
+
+    (29) lambda -> LAMBDA LPAREN args . RPAREN expression
+    (38) args -> args . COMMA arg
+
+    RPAREN          shift and go to state 77
+    COMMA           shift and go to state 74
+
+
+state 69
+
+    (28) term -> LCBRACE term RCBRACE .
+
+    PLUS            reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    MINUS           reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    TIMES           reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    EQUALITY        reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    GREATER         reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    LESS            reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    GREATEREQUAL    reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    LESSEQUAL       reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    DIVIDE          reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    PIPE            reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    $end            reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    RPAREN          reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    DO              reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    THEN            reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    COMMA           reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    IN              reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    ELSE            reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    LPAREN          reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+    RCBRACE         reduce using rule 28 (term -> LCBRACE term RCBRACE .)
+
+
+state 70
+
+    (7) expression -> LET IDENTIFIER EQUALS expression . IN expression
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+    IN              shift and go to state 78
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+
+state 71
+
+    (24) expression -> WHILE expression DO expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESS resolved as shift
+  ! shift/reduce conflict for GREATEREQUAL resolved as shift
+  ! shift/reduce conflict for LESSEQUAL resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for PIPE resolved as shift
+    $end            reduce using rule 24 (expression -> WHILE expression DO expression .)
+    RPAREN          reduce using rule 24 (expression -> WHILE expression DO expression .)
+    DO              reduce using rule 24 (expression -> WHILE expression DO expression .)
+    THEN            reduce using rule 24 (expression -> WHILE expression DO expression .)
+    COMMA           reduce using rule 24 (expression -> WHILE expression DO expression .)
+    IN              reduce using rule 24 (expression -> WHILE expression DO expression .)
+    ELSE            reduce using rule 24 (expression -> WHILE expression DO expression .)
+    LPAREN          reduce using rule 24 (expression -> WHILE expression DO expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+  ! PLUS            [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+  ! MINUS           [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+  ! TIMES           [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+  ! EQUALITY        [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+  ! GREATER         [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+  ! LESS            [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+  ! GREATEREQUAL    [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+  ! LESSEQUAL       [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+  ! DIVIDE          [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+  ! PIPE            [ reduce using rule 24 (expression -> WHILE expression DO expression .) ]
+
+
+state 72
+
+    (25) expression -> IF expression THEN expression . ELSE expression
+    (26) expression -> IF expression THEN expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+  ! shift/reduce conflict for ELSE resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESS resolved as shift
+  ! shift/reduce conflict for GREATEREQUAL resolved as shift
+  ! shift/reduce conflict for LESSEQUAL resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for PIPE resolved as shift
+    ELSE            shift and go to state 79
+    $end            reduce using rule 26 (expression -> IF expression THEN expression .)
+    RPAREN          reduce using rule 26 (expression -> IF expression THEN expression .)
+    DO              reduce using rule 26 (expression -> IF expression THEN expression .)
+    THEN            reduce using rule 26 (expression -> IF expression THEN expression .)
+    COMMA           reduce using rule 26 (expression -> IF expression THEN expression .)
+    IN              reduce using rule 26 (expression -> IF expression THEN expression .)
+    LPAREN          reduce using rule 26 (expression -> IF expression THEN expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+  ! PLUS            [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! MINUS           [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! TIMES           [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! EQUALITY        [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! GREATER         [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! LESS            [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! GREATEREQUAL    [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! LESSEQUAL       [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! DIVIDE          [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! PIPE            [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+  ! ELSE            [ reduce using rule 26 (expression -> IF expression THEN expression .) ]
+
+
+state 73
+
+    (34) function_call -> function_call LPAREN args RPAREN .
+
+    LPAREN          reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    PLUS            reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    MINUS           reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    TIMES           reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    EQUALITY        reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    GREATER         reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    LESS            reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    GREATEREQUAL    reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    LESSEQUAL       reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    DIVIDE          reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    PIPE            reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    $end            reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    RPAREN          reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    DO              reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    THEN            reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    COMMA           reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    IN              reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+    ELSE            reduce using rule 34 (function_call -> function_call LPAREN args RPAREN .)
+
+
+state 74
+
+    (38) args -> args COMMA . arg
+    (41) arg -> . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    arg                            shift and go to state 80
+    expression                     shift and go to state 65
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 75
+
+    (36) function_call -> lambda LPAREN args RPAREN .
+
+    LPAREN          reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    PLUS            reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    MINUS           reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    TIMES           reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    EQUALITY        reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    GREATER         reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    LESS            reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    GREATEREQUAL    reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    LESSEQUAL       reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    DIVIDE          reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    PIPE            reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    $end            reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    RPAREN          reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    DO              reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    THEN            reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    COMMA           reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    IN              reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+    ELSE            reduce using rule 36 (function_call -> lambda LPAREN args RPAREN .)
+
+
+state 76
+
+    (3) import -> IMPORT IDENTIFIER AS IDENTIFIER .
+
+    IDENTIFIER      reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    LET             reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    MINUS           reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    LPAREN          reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    WHILE           reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    IF              reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    LAZY            reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    IMPORT          reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    LAMBDA          reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    LCBRACE         reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    STRING          reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    NUMBER          reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    TRUE            reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+    FALSE           reduce using rule 3 (import -> IMPORT IDENTIFIER AS IDENTIFIER .)
+
+
+state 77
+
+    (29) lambda -> LAMBDA LPAREN args RPAREN . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 81
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 78
+
+    (7) expression -> LET IDENTIFIER EQUALS expression IN . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 82
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 79
+
+    (25) expression -> IF expression THEN expression ELSE . expression
+    (6) expression -> . IDENTIFIER EQUALS expression
+    (7) expression -> . LET IDENTIFIER EQUALS expression IN expression
+    (8) expression -> . expression PLUS expression
+    (9) expression -> . expression MINUS expression
+    (10) expression -> . expression TIMES expression
+    (11) expression -> . expression EQUALITY expression
+    (12) expression -> . expression GREATER expression
+    (13) expression -> . expression LESS expression
+    (14) expression -> . expression GREATEREQUAL expression
+    (15) expression -> . expression LESSEQUAL expression
+    (16) expression -> . expression DIVIDE expression
+    (17) expression -> . MINUS expression
+    (18) expression -> . LPAREN expression RPAREN
+    (24) expression -> . WHILE expression DO expression
+    (25) expression -> . IF expression THEN expression ELSE expression
+    (26) expression -> . IF expression THEN expression
+    (27) expression -> . LAZY expression
+    (30) expression -> . expression PIPE expression
+    (31) expression -> . function_call
+    (32) expression -> . lambda
+    (33) expression -> . term
+    (34) function_call -> . function_call LPAREN args RPAREN
+    (35) function_call -> . function_call LPAREN RPAREN
+    (36) function_call -> . lambda LPAREN args RPAREN
+    (37) function_call -> . IDENTIFIER
+    (29) lambda -> . LAMBDA LPAREN args RPAREN expression
+    (19) term -> . factor
+    (28) term -> . LCBRACE term RCBRACE
+    (20) factor -> . STRING
+    (21) factor -> . NUMBER
+    (22) factor -> . TRUE
+    (23) factor -> . FALSE
+
+    IDENTIFIER      shift and go to state 5
+    LET             shift and go to state 6
+    MINUS           shift and go to state 7
+    LPAREN          shift and go to state 8
+    WHILE           shift and go to state 9
+    IF              shift and go to state 10
+    LAZY            shift and go to state 11
+    LAMBDA          shift and go to state 16
+    LCBRACE         shift and go to state 18
+    STRING          shift and go to state 19
+    NUMBER          shift and go to state 20
+    TRUE            shift and go to state 21
+    FALSE           shift and go to state 22
+
+    expression                     shift and go to state 83
+    function_call                  shift and go to state 12
+    lambda                         shift and go to state 13
+    term                           shift and go to state 14
+    factor                         shift and go to state 17
+
+state 80
+
+    (38) args -> args COMMA arg .
+
+    RPAREN          reduce using rule 38 (args -> args COMMA arg .)
+    COMMA           reduce using rule 38 (args -> args COMMA arg .)
+
+
+state 81
+
+    (29) lambda -> LAMBDA LPAREN args RPAREN expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESS resolved as shift
+  ! shift/reduce conflict for GREATEREQUAL resolved as shift
+  ! shift/reduce conflict for LESSEQUAL resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for PIPE resolved as shift
+    LPAREN          reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .)
+    $end            reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .)
+    RPAREN          reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .)
+    DO              reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .)
+    THEN            reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .)
+    COMMA           reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .)
+    IN              reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .)
+    ELSE            reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+  ! PLUS            [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+  ! MINUS           [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+  ! TIMES           [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+  ! EQUALITY        [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+  ! GREATER         [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+  ! LESS            [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+  ! GREATEREQUAL    [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+  ! LESSEQUAL       [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+  ! DIVIDE          [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+  ! PIPE            [ reduce using rule 29 (lambda -> LAMBDA LPAREN args RPAREN expression .) ]
+
+
+state 82
+
+    (7) expression -> LET IDENTIFIER EQUALS expression IN expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESS resolved as shift
+  ! shift/reduce conflict for GREATEREQUAL resolved as shift
+  ! shift/reduce conflict for LESSEQUAL resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for PIPE resolved as shift
+    $end            reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .)
+    RPAREN          reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .)
+    DO              reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .)
+    THEN            reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .)
+    COMMA           reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .)
+    IN              reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .)
+    ELSE            reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .)
+    LPAREN          reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+  ! PLUS            [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+  ! MINUS           [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+  ! TIMES           [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+  ! EQUALITY        [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+  ! GREATER         [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+  ! LESS            [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+  ! GREATEREQUAL    [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+  ! LESSEQUAL       [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+  ! DIVIDE          [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+  ! PIPE            [ reduce using rule 7 (expression -> LET IDENTIFIER EQUALS expression IN expression .) ]
+
+
+state 83
+
+    (25) expression -> IF expression THEN expression ELSE expression .
+    (8) expression -> expression . PLUS expression
+    (9) expression -> expression . MINUS expression
+    (10) expression -> expression . TIMES expression
+    (11) expression -> expression . EQUALITY expression
+    (12) expression -> expression . GREATER expression
+    (13) expression -> expression . LESS expression
+    (14) expression -> expression . GREATEREQUAL expression
+    (15) expression -> expression . LESSEQUAL expression
+    (16) expression -> expression . DIVIDE expression
+    (30) expression -> expression . PIPE expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESS resolved as shift
+  ! shift/reduce conflict for GREATEREQUAL resolved as shift
+  ! shift/reduce conflict for LESSEQUAL resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for PIPE resolved as shift
+    $end            reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .)
+    RPAREN          reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .)
+    DO              reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .)
+    THEN            reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .)
+    COMMA           reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .)
+    IN              reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .)
+    ELSE            reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .)
+    LPAREN          reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .)
+    PLUS            shift and go to state 25
+    MINUS           shift and go to state 26
+    TIMES           shift and go to state 27
+    EQUALITY        shift and go to state 28
+    GREATER         shift and go to state 29
+    LESS            shift and go to state 30
+    GREATEREQUAL    shift and go to state 31
+    LESSEQUAL       shift and go to state 32
+    DIVIDE          shift and go to state 33
+    PIPE            shift and go to state 34
+
+  ! PLUS            [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! MINUS           [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! TIMES           [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! EQUALITY        [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! GREATER         [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! LESS            [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! GREATEREQUAL    [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! LESSEQUAL       [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! DIVIDE          [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! PIPE            [ reduce using rule 25 (expression -> IF expression THEN expression ELSE expression .) ]
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for LPAREN in state 12 resolved as shift
+WARNING: shift/reduce conflict for LPAREN in state 13 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 41 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 41 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 41 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 41 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 41 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 41 resolved as shift
+WARNING: shift/reduce conflict for GREATEREQUAL in state 41 resolved as shift
+WARNING: shift/reduce conflict for LESSEQUAL in state 41 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 41 resolved as shift
+WARNING: shift/reduce conflict for PIPE in state 41 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 42 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 57 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 57 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 57 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 57 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 57 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 57 resolved as shift
+WARNING: shift/reduce conflict for GREATEREQUAL in state 57 resolved as shift
+WARNING: shift/reduce conflict for LESSEQUAL in state 57 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 57 resolved as shift
+WARNING: shift/reduce conflict for PIPE in state 57 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 71 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 71 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 71 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 71 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 71 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 71 resolved as shift
+WARNING: shift/reduce conflict for GREATEREQUAL in state 71 resolved as shift
+WARNING: shift/reduce conflict for LESSEQUAL in state 71 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 71 resolved as shift
+WARNING: shift/reduce conflict for PIPE in state 71 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 72 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 72 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 72 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 72 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 72 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 72 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 72 resolved as shift
+WARNING: shift/reduce conflict for GREATEREQUAL in state 72 resolved as shift
+WARNING: shift/reduce conflict for LESSEQUAL in state 72 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 72 resolved as shift
+WARNING: shift/reduce conflict for PIPE in state 72 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 81 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 81 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 81 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 81 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 81 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 81 resolved as shift
+WARNING: shift/reduce conflict for GREATEREQUAL in state 81 resolved as shift
+WARNING: shift/reduce conflict for LESSEQUAL in state 81 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 81 resolved as shift
+WARNING: shift/reduce conflict for PIPE in state 81 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 82 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 82 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 82 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 82 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 82 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 82 resolved as shift
+WARNING: shift/reduce conflict for GREATEREQUAL in state 82 resolved as shift
+WARNING: shift/reduce conflict for LESSEQUAL in state 82 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 82 resolved as shift
+WARNING: shift/reduce conflict for PIPE in state 82 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 83 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 83 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 83 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 83 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 83 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 83 resolved as shift
+WARNING: shift/reduce conflict for GREATEREQUAL in state 83 resolved as shift
+WARNING: shift/reduce conflict for LESSEQUAL in state 83 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 83 resolved as shift
+WARNING: shift/reduce conflict for PIPE in state 83 resolved as shift

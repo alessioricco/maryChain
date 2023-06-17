@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='maryChain',                           # should match the package folder
-    version='0.0.1',                                # important for updates
+    version='0.0.3',                                # important for updates
     license='MIT',                                  # should match your chosen license
     description='maryChain - lightweight programming functional language for LLM',
     long_description=long_description,              # loads your README.md
@@ -31,5 +31,5 @@ setup(
     install_requires=[
         "ply",
     ],   
-    download_url="https://github.com/DashyDashOrg/pandas-llm/releases/tag/v0.0.6",
+    download_url="https://github.com/alessioricco/maryChain/releases/tag/v0.0.3",
 )

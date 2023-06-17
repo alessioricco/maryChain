@@ -1,49 +1,12 @@
 '''BNF
-<program> ::= <defn>* <expr>?
-<expression> ::= <term>
-              | <term> "+" <expression>
-              | <term> "-" <expression>
-              | <term> "*" <expression>
-              | <term> "/" <expression>
-              | "(" <expression> ")"
-              | <term> "==" <expression>
-              | <term> "<" <expression>
-              | <term> ">" <expression>
-              | <term> "<=" <expression>
-              | <term> ">=" <expression>
-              | "if" <expression> "then" <expression> "else" <expression>
-              | "while" <expression> "do" <expression>
-              | "lazy" <expression>
-              | "{" <expression> "}"
-              | "lambda" "(" <args> ")" <expression>
-              | <expression> "|" <expression>
 
-<term> ::= <factor>
-        | <string>
-        | <number>
-        | <boolean>
-        | <function_call>
-
-<factor> ::= <number>
-           | <string>
-           | "true"
-           | "false"
-
-<function_call> ::= <function_call> "(" <args> ")"
-                  | <identifier> "(" <args> ")"
-                  | <identifier>
-
-<args> ::= <arg>
-         | <args> "," <arg>
-
-<arg> ::= <expression>
 '''
 
 # Importing necessary libraries
 from ply import lex, yacc
-from maryChainAST import Program, BinOp, UnaryOperation, Number, String, Boolean, Identifier, LetIn, LambdaFunction
-from maryChainAST import FunctionDef, FunctionCall, While, IfThenElse, IfThen, Lazy, Pipe, Import
-import maryChainAST as AST
+from maryChain.maryChainAST import Program, BinOp, UnaryOperation, Number, String, Boolean, Identifier, LetIn, LambdaFunction
+from maryChain.maryChainAST import FunctionCall, While, IfThenElse, IfThen, Lazy, Pipe, Import, CurriedFunction, Assignment
+import maryChain.maryChainAST as AST
 
 # Define the list of tokens that the lexer will recognize
 # Define the list of tokens that the lexer will recognize.
@@ -144,35 +107,16 @@ reserved = {
 }
 
 
-# Define operator precedence rules.
-# These rules dictate the order in which operations are performed when evaluating expressions, 
-# i.e., which operations are done first.
-# Each rule is a tuple where the first element is the associativity of the operators ('left' or 'right'),
-# and the remaining elements are the operator(s) at that level of precedence.
+
 precedence = (
-    # The pipe operator has the lowest precedence and is left-associative.
     ('left', 'PIPE'),
-
-    # The logical OR operator is next in line with left associativity.
     ('left', 'OR'),
-
-    # The logical AND operator follows with left associativity.
     ('left', 'AND'),
-
-    # The logical NOT operator is next with left associativity.
     ('left', 'NOT'),
-
-    # The equality and relational operators all have the same level of precedence and are left-associative.
-    ('left', 'EQUALITY', 'GREATER', 'LESS', 'GREATEREQUAL', 'LESSEQUAL'),
-
-    # The addition and subtraction operators are at the next level of precedence, also left-associative.
-    ('left', 'PLUS', 'MINUS'),
-
-    # The multiplication and division operators are next with higher precedence, left-associative.
-    ('left', 'TIMES', 'DIVIDE'),
-
-    # The unary minus operator has the highest precedence and is right-associative.
+    ('nonassoc', 'EQUALITY', 'GREATER', 'LESS', 'GREATEREQUAL', 'LESSEQUAL'),
     ('right', 'UMINUS'),
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'TIMES', 'DIVIDE'),
 )
 
 
@@ -258,11 +202,7 @@ def t_error(t):
 lexer = lex.lex()
 
 def p_program(t):
-    '''program : definitions imports expression
-               | imports expression
-               | definitions expression
-               | imports
-               | definitions
+    '''program : imports expression
                | expression'''
     """
     Handles the parsing of the whole program.
@@ -280,34 +220,50 @@ def p_program(t):
 
     if len(t) == 2:
         imports = []
-        definitions = []
         expression = t[1]
         if isinstance(t[1],list):
             if len(t[1])> 0:
                 if isinstance(t[1][0], Import):
                     imports = t[1]
                     expression = None
-                elif isinstance(t[1][0], FunctionDef):
-                    definitions = t[1]
-                    expression = None
             
-        t[0] = Program(imports, definitions, expression)
+        t[0] = Program(imports, expression)
 
     elif len(t) == 3:
-        # is definition or expresssion?
-        imports = []
-        definitions = []
-        if isinstance(t[1],list):
-            if len(t[1])> 0:
-                if isinstance(t[1][0], Import):
-                    imports = t[1]
-                elif isinstance(t[1][0], FunctionDef):
-                    definitions = t[1]
+            # is definition or expresssion?
+            imports = []
+            if isinstance(t[1],list):
+                if len(t[1])> 0:
+                    if isinstance(t[1][0], Import):
+                        imports = t[1]
 
-        t[0] = Program(definitions, imports, t[2])
-    elif len(t) == 4:
-        t[0] = Program(t[1], t[2], t[3])
 
+            t[0] = Program(imports, t[2])
+
+# --------------------------------------------------------------
+
+def p_import(t):
+    'import : IMPORT IDENTIFIER AS IDENTIFIER'
+    print("Import statement detected: ", t[2], t[4])
+    t[0] = Import(t[2], t[4])
+
+def p_imports(t):
+    '''
+    imports : import
+            | imports import
+    '''
+    # if there's only one import statement
+    if len(t) == 2:
+        t[0] = [t[1]]
+    # if there's more than one import statement
+    else:
+        t[1].append(t[2])
+        t[0] = t[1]
+
+def p_expression_assignment(t):
+    'expression : IDENTIFIER EQUALS expression'
+
+    t[0] = Assignment(t[1], t[3])
 
 def p_expression_let_in(t):
     'expression : LET IDENTIFIER EQUALS expression IN expression'
@@ -330,60 +286,31 @@ def p_expression_let_in(t):
     """
     t[0] = LetIn(t[2], t[4], t[6])
 
-
-
 def p_expression_binop(t):
     '''expression : expression PLUS expression
                   | expression MINUS expression
                   | expression TIMES expression
+                  | expression EQUALITY expression
+                  | expression GREATER expression
+                  | expression LESS expression
+                  | expression GREATEREQUAL expression
+                  | expression LESSEQUAL expression
                   | expression DIVIDE expression'''
     """
     Handles the parsing of binary operations.
 
     The function handles the basic binary mathematical operations: addition, subtraction,
-    multiplication, and division. For a given operation 'expression OPERATOR expression', it
+    multiplication, and division. For a given operation 'expression BINOPS expression', it
     constructs a BinOp object with the two expressions and the operator as arguments.
 
     Parameters:
     t: A list where each element represents a component of the syntax being parsed. The elements
-       correspond to the 'expression OPERATOR expression' structure.
+       correspond to the 'expression BINOPS expression' structure.
 
     Sets:
     t[0]: A BinOp object, representing the binary operation.
     """
     t[0] = BinOp(t[1], t[2], t[3])
-
-
-# --------------------------------------------------------------
-#  import
-def p_namespace(p):
-    '''namespace : IDENTIFIER
-                 | namespace DOT IDENTIFIER'''
-    if len(p) == 2:
-        # If namespace is a single identifier, make it a one-element list
-        p[0] = [p[1]]
-    else:
-        # If namespace is another namespace followed by an identifier, 
-        # append the identifier to the list of identifiers in the namespace
-        p[0] = p[1] + [p[3]]
-
-def p_import(t):
-    'import : IMPORT IDENTIFIER AS IDENTIFIER'
-    print("Import statement detected: ", t[2], t[4])
-    t[0] = Import(t[2], t[4])
-
-def p_imports(t):
-    '''
-    imports : import
-            | imports import
-    '''
-    # if there's only one import statement
-    if len(t) == 2:
-        t[0] = [t[1]]
-    # if there's more than one import statement
-    else:
-        t[1].append(t[2])
-        t[0] = t[1]
 
 
 # Rule for unary minus operation
@@ -483,7 +410,7 @@ def p_lazy_expr(t):
 
 
 def p_expression_braces(t):
-    'expression : LCBRACE expression RCBRACE'
+    'term : LCBRACE term RCBRACE'
     """
     Handles the parsing of expressions within braces in the language.
 
@@ -501,7 +428,7 @@ def p_expression_braces(t):
 
 
 def p_expression_lambda(t):
-    'expression : LAMBDA LPAREN args RPAREN expression'
+    'lambda : LAMBDA LPAREN args RPAREN expression'
     """
     Handles the parsing of lambda expressions in the language.
 
@@ -536,7 +463,8 @@ def p_expression_pipe(p):
     p[0] = Pipe(p[1], p[3])  # Create a new Pipe node.
 
 def p_expression_func_call(t):
-    'expression : function_call'
+    '''expression : function_call 
+                  | lambda'''
     """
     Handles the parsing of function calls in the language.
 
@@ -605,91 +533,28 @@ def p_error(t):
 # -------------------------------------------------------------------
 # Rule for function calls
 
-def p_function_definition(t):
-    'function_definition : FUNC IDENTIFIER LPAREN args RPAREN LCBRACE expression RCBRACE'
-    """
-    Parses function definition expressions.
-
-    This function parses a function definition, which consists of the 'func' keyword,
-    followed by an identifier (the function's name), parentheses enclosing arguments 
-    (if any), and a block of code enclosed in curly braces. 
-
-    After successful parsing, a FunctionDef object is constructed with the function name, 
-    arguments, and the expression (body of the function) as arguments.
-
-    Parameters:
-    t: A PLY lex token instance. It is a tuple where t[2] is the function's name, t[4] is 
-       the function's arguments, and t[7] is the body of the function (an expression).
-
-    Returns:
-    None
-    """
-    # FunctionDef is a hypothetical class to store function definitions. This will need to be 
-    # defined elsewhere in your code. It takes the function name, the arguments, and the body 
-    # of the function (an expression).
-    t[0] = FunctionDef(t[2], t[4], t[7]) 
-
-def p_definitions(t):
-    '''
-    definitions : function_definition
-                | definitions function_definition
-    '''
-    # if there's only one function definition
-    if len(t) == 2:
-        t[0] = [t[1]]
-    # if there's more than one function definition
-    else:
-        t[1].append(t[2])
-        t[0] = t[1]
-
-
-# def p_function_call(t):
-    '''function_call : function_call LPAREN args RPAREN
-                     | IDENTIFIER LPAREN args RPAREN
-                     | IDENTIFIER'''
-    """
-    Parses function call expressions.
-
-    This function parses a function call, which may be a simple function call with or without 
-    arguments, or a chained function call with or without arguments. It constructs a FunctionCall 
-    object with the function's name and arguments.
-
-    Parameters:
-    t: A PLY lex token instance. If it is a simple function call, t[1] is the function's name 
-       and t[3] are the function's arguments. If it is a chained function call, t[1] is the 
-       previous function call, and t[3] are the arguments of the next function in the chain.
-
-    Returns:
-    None
-    """
-    # # Check if there are arguments in the function call, if not set it to an empty list
-    # args = [] if len(t) == 2 else t[3]
-    # # Get the function name (it can be an identifier or another function call in case of function chaining)
-    # function_name = t[1]
-    # # FunctionCall and Identifier are hypothetical classes to store function calls and identifiers.
-    # # These will need to be defined elsewhere in your code. FunctionCall takes the function name 
-    # # (wrapped in an Identifier instance) and the arguments of the function.
-    # t[0] = FunctionCall(Identifier(function_name), args) 
-
-
 def p_function_call(t):
     '''function_call : function_call LPAREN args RPAREN
-                     | IDENTIFIER LPAREN args RPAREN
+                     | function_call LPAREN RPAREN
+                     | lambda LPAREN args RPAREN
                      | IDENTIFIER'''
-    if len(t) == 4 and isinstance(t[2], FunctionCall):
-        # Function call following another function call
-        # Treat it as currying
-        t[0] = FunctionCall(t[2], [t[4]])
+    if len(t) == 4:
+        # function_call LPAREN args RPAREN
+        # a function call with arguments
+        t[0] = FunctionCall(t[1], t[3])
     elif len(t) == 2:
-        # Single function call
-        args = []
-        function_name = t[1]
-        t[0] = FunctionCall(Identifier(function_name), args)
-    else:
-        # Function call with arguments
-        args = t[3]
-        function_name = t[1]
-        t[0] = FunctionCall(Identifier(function_name), args)
+        # IDENTIFIER
+        # could be an entity of type function (a lambda associated with a variable)
+        t[0] = Identifier(t[1])
+    elif len(t) == 5:
+        # Function call with arguments followed by another function call or identifier
+        if isinstance(t[3], FunctionCall) or isinstance(t[3], Identifier):
+            t[0] = FunctionCall(t[1], [t[3]])
+        elif isinstance(t[1],LambdaFunction):
+            t[0] = FunctionCall(t[1],t[3])
+        else:
+            # Handle currying
+            t[0] = CurriedFunction(t[1], [t[3]])
 
 
 def p_args(t):
@@ -773,7 +638,7 @@ def eval(s):
 
     # If the result is a Lazy node, evaluate it to get the final result
     if isinstance(result, Lazy):
-        result = result.evaluate()
+        result = result.evaluate(AST.ENVIRONMENT)
 
     # Return the result of the evaluation
     return result
